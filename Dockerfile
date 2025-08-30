@@ -28,12 +28,6 @@ RUN composer install --no-dev --optimize-autoloader
 # Set ownership to the www-data user/group (common for Nginx/PHP-FPM)
 RUN chown -R www-data:www-data /var/www/html
 
-# Set directory permissions to allow read and execute for owner/group/others (755)
-RUN find /var/www/html -type d -exec chmod 755 {} \;
-
-# Set file permissions to allow read and write for owner/group (644)
-RUN find /var/www/html -type f -exec chmod 644 {} \;
-
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
 
