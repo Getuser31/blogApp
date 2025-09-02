@@ -3,74 +3,55 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * @param $root
+     * @param array $args
+     * @return array|JsonResponse
+     * @throws ValidationException
      */
-    public function login(Request $request): JsonResponse
+    public function login($root, array $args): array|JsonResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+        // Basic input validation
+        $validator = Validator::make($args, [
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
         ]);
-        $credentials = $request->only('email', 'password');
 
-        if (!auth()->attempt($credentials)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if ($validator->fails()) {
+            throw ValidationException::withMessages($validator->errors()->toArray());
         }
 
-        $user = auth()->user();
-        $token = $user->createToken('authToken')->plainTextToken;
-        return response()->json([
+        $email = $args['email'];
+        $password = $args['password'];
+
+        // Find the user by email
+        $user = User::where('email', $email)->first();
+
+        // Validate credentials
+        if (!$user || !Hash::check($password, $user->password)) {
+            // Avoid leaking which field was incorrect
+            throw ValidationException::withMessages([
+                'email' => 'The provided credentials are incorrect.',
+            ]);
+        }
+
+        // Create Sanctum token
+        $token = $user->createToken('graphql')->plainTextToken;
+
+        return [
             'token' => $token,
-            'token_type' => 'Bearer',
             'user' => $user,
-        ]);
-    }
+        ];
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
