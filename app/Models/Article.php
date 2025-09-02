@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    protected $connection = 'mongodb';
-    
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'content',
-        'author',
+        'author_id',
     ];
 
 }
