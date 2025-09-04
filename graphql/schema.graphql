@@ -1,0 +1,54 @@
+"A date string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"A user of the application."
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    role: Role! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+"An article written by a user."
+type Article {
+    id: ID!
+    title: String!
+    content: String!
+    author: User! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+"A role for a user."
+type Role {
+    id: ID!
+    name: String!
+    slug: String!
+}
+
+"Defines the queries available to the client."
+type Query @guard(with: ["sanctum"]) {
+    "Find all articles, paginated."
+    articles: [Article!]! @paginate(defaultCount: 10)
+
+    "Find all article by a specific user, paginated"
+    articlesByUser(userID: ID! @eq(key: "author_id")): [Article!] @paginate(defaultCount: 10)
+
+    "Find a user."
+    user(id: ID! @eq): User @find
+}
+
+"A token response for authentication."
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+
+"Defines the mutations available to the client."
+type Mutation {
+    "Login a user and receive a token."
+    login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
+}
