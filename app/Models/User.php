@@ -47,6 +47,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

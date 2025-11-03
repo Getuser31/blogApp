@@ -51,4 +51,5 @@ type AuthPayload {
 type Mutation {
     "Login a user and receive a token."
     login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
+    createArticle(title: String!, content: String!): Article @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle") @guard(with: ["sanctum"])
 }
