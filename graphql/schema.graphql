@@ -38,6 +38,12 @@ type Query @guard(with: ["sanctum"]) {
 
     "Find a user."
     user(id: ID! @eq): User @find
+
+    "Me"
+    me: User @auth
+
+    "Get Article by Id"
+    article(id: ID!): Article @field(resolver: "App\\GraphQL\\Queries\\Article")
 }
 
 "A token response for authentication."
