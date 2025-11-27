@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -13,10 +14,10 @@ final readonly class CreateArticle
      *
      * @param  null  $_
      * @param  array{title: string, content: string}  $args
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      * @throws ValidationException
      */
-    public function __invoke(null $_, array $args): \Illuminate\Database\Eloquent\Model
+    public function __invoke(null $_, array $args): Model
     {
         $validator = Validator::make($args, [
             'title' => ['required', 'string', 'max:255'],

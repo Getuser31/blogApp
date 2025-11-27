@@ -1,0 +1,35 @@
+<?php declare(strict_types=1);
+
+namespace App\GraphQL\Mutations;
+
+use App\Models\Article;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+
+final readonly class EditArticle
+{
+    /** @param  array{}  $args */
+    public function __invoke(null $_, array $args)
+    {
+        $validator = Validator::make($args, [
+            'id' => ['required', 'integer', 'exists:articles,id'],
+            'title' => ['sometimes', 'string', 'max:255'],
+            'content' => ['sometimes', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            throw ValidationException::withMessages($validator->errors()->toArray());
+        }
+
+        $article = Article::findOrFail($args['id']);
+
+        $updateData = collect($args)->except('id')->all();
+
+        if (!empty($updateData)) {
+            $article->fill($updateData);
+            $article->save();
+        }
+
+        return $article;
+    }
+}

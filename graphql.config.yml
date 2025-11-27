@@ -1,0 +1,11 @@
+schema: "graphql/schema.graphql"
+documents:
+  - "resources/**/*.graphql"
+  - "resources/**/*.gql"
+extensions:
+  endpoints:
+    local:
+      url: "http://localhost:8000/graphql"
+      headers:
+        X-Requested-With: "XMLHttpRequest"
+      includeCookies: true
