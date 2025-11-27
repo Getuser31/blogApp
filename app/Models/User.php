@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,9 +48,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Article::class, 'author_id');
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Roles::class);
     }
 
     /**
@@ -63,10 +70,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Roles::class, 'role_id');
     }
 }

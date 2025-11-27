@@ -55,8 +55,15 @@ type AuthPayload {
 
 "Defines the mutations available to the client."
 type Mutation {
-    "Login a user and receive a token."
     login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
-    createArticle(title: String!, content: String!): Article @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle") @guard(with: ["sanctum"])
-    editArticle(id: ID!, title: String, content: String): Article @field(resolver: "App\\GraphQL\\Mutations\\EditArticle") @guard(with: ["sanctum"])
+
+    createArticle(title: String!, content: String!): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
+    @guard(with: ["sanctum", "admin"])
+    @admin
+
+    editArticle(id: ID!, title: String, content: String): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
+    @guard(with: ["sanctum", "admin"])
+    @admin
 }
