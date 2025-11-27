@@ -8,8 +8,10 @@ use Illuminate\Validation\ValidationException;
 
 final readonly class EditArticle
 {
-    /** @param  array{}  $args */
-    public function __invoke(null $_, array $args)
+    /** @param array{} $args
+     * @throws ValidationException
+     */
+    public function __invoke(null $_, array $args): Article|\Illuminate\Database\Eloquent\Collection
     {
         $validator = Validator::make($args, [
             'id' => ['required', 'integer', 'exists:articles,id'],

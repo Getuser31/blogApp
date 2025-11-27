@@ -5223,7 +5223,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the underlying database connection.
          *
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function getConnection()
@@ -5248,7 +5248,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the connection used to manage locks.
          *
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function getLockConnection()
@@ -6913,7 +6913,7 @@ namespace Illuminate\Support\Facades {
          * Build a database connection instance from the given configuration.
          *
          * @param array $config
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function build($config)
@@ -6940,7 +6940,7 @@ namespace Illuminate\Support\Facades {
          * @param string $name
          * @param array $config
          * @param bool $force
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function connectUsing($name, $config, $force = false)
@@ -7183,199 +7183,92 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
-         * Begin a fluent query against a database collection.
+         * Get a human-readable name for the given connection driver.
          *
-         * @param string $table The name of the MongoDB collection
-         * @param string|null $as Ignored. Not supported by MongoDB
-         * @return \MongoDB\Laravel\Query\Builder
-         * @static
-         */
-        public static function table($table, $as = null)
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->table($table, $as);
-        }
-
-        /**
-         * Get a MongoDB collection.
-         *
-         * @param string $name
-         * @return \Illuminate\Support\Collection
-         * @static
-         */
-        public static function getCollection($name)
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getCollection($name);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function getSchemaBuilder()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getSchemaBuilder();
-        }
-
-        /**
-         * Get the MongoDB database object.
-         *
-         * @deprecated since mongodb/laravel-mongodb:5.2, use getDatabase() instead
-         * @return \MongoDB\Laravel\Database
-         * @static
-         */
-        public static function getMongoDB()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getMongoDB();
-        }
-
-        /**
-         * Get the MongoDB database object.
-         *
-         * @param string|null $name Name of the database, if not provided the default database will be returned.
-         * @return \MongoDB\Laravel\Database
-         * @static
-         */
-        public static function getDatabase($name = null)
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getDatabase($name);
-        }
-
-        /**
-         * Return MongoDB object.
-         *
-         * @deprecated since mongodb/laravel-mongodb:5.2, use getClient() instead
-         * @return \MongoDB\Laravel\Client
-         * @static
-         */
-        public static function getMongoClient()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getMongoClient();
-        }
-
-        /**
-         * Get the MongoDB client.
-         *
-         * @static
-         */
-        public static function getClient()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getClient();
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function enableQueryLog()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->enableQueryLog();
-        }
-
-        /**
-         * @static
-         */
-        public static function disableQueryLog()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->disableQueryLog();
-        }
-
-        /**
-         * Check the connection to the MongoDB server
-         *
-         * @throws ConnectionException if connection to the server fails (for reasons other than authentication).
-         * @throws AuthenticationException if authentication is needed and fails.
-         * @throws RuntimeException if a server matching the read preference could not be found.
-         * @static
-         */
-        public static function ping()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->ping();
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function getDriverName()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getDriverName();
-        }
-
-        /**
-         * @inheritdoc
+         * @return string
          * @static
          */
         public static function getDriverTitle()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getDriverTitle();
         }
 
         /**
-         * Set database.
+         * Run an insert statement against the database.
          *
+         * @param string $query
+         * @param array $bindings
+         * @param string|null $sequence
+         * @return bool
          * @static
          */
-        public static function setDatabase($db)
+        public static function insert($query, $bindings = [], $sequence = null)
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->setDatabase($db);
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->insert($query, $bindings, $sequence);
         }
 
         /**
-         * @inheritdoc
+         * Get the connection's last insert ID.
+         *
+         * @return string|int|null
          * @static
          */
-        public static function threadCount()
+        public static function getLastInsertId()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->threadCount();
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getLastInsertId();
         }
 
         /**
-         * Set whether to rename "id" field into "_id" for embedded documents.
+         * Determine if the connected database is a MariaDB database.
          *
+         * @return bool
          * @static
          */
-        public static function setRenameEmbeddedIdField($rename)
+        public static function isMaria()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->setRenameEmbeddedIdField($rename);
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->isMaria();
         }
 
         /**
-         * Get whether to rename "id" field into "_id" for embedded documents.
+         * Get the server version for the connection.
          *
-         * @static
-         */
-        public static function getRenameEmbeddedIdField()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getRenameEmbeddedIdField();
-        }
-
-        /**
-         * Return the server version of one of the MongoDB servers: primary for
-         * replica sets and standalone, and the selected server for sharded clusters.
-         *
-         * @internal
+         * @return string
          * @static
          */
         public static function getServerVersion()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getServerVersion();
+        }
+
+        /**
+         * Get a schema builder instance for the connection.
+         *
+         * @return \Illuminate\Database\Schema\MySqlBuilder
+         * @static
+         */
+        public static function getSchemaBuilder()
+        {
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getSchemaBuilder();
+        }
+
+        /**
+         * Get the schema state for the connection.
+         *
+         * @param \Illuminate\Filesystem\Filesystem|null $files
+         * @param callable|null $processFactory
+         * @return \Illuminate\Database\Schema\MySqlSchemaState
+         * @static
+         */
+        public static function getSchemaState($files = null, $processFactory = null)
+        {
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getSchemaState($files, $processFactory);
         }
 
         /**
@@ -7387,7 +7280,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->useDefaultQueryGrammar();
         }
 
@@ -7400,7 +7293,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->useDefaultSchemaGrammar();
         }
 
@@ -7413,8 +7306,23 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->useDefaultPostProcessor();
+        }
+
+        /**
+         * Begin a fluent query against a database table.
+         *
+         * @param \Closure|\Illuminate\Database\Query\Builder|\Illuminate\Contracts\Database\Query\Expression|\UnitEnum|string $table
+         * @param string|null $as
+         * @return \Illuminate\Database\Query\Builder
+         * @static
+         */
+        public static function table($table, $as = null)
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->table($table, $as);
         }
 
         /**
@@ -7426,7 +7334,7 @@ namespace Illuminate\Support\Facades {
         public static function query()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->query();
         }
 
@@ -7442,7 +7350,7 @@ namespace Illuminate\Support\Facades {
         public static function selectOne($query, $bindings = [], $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->selectOne($query, $bindings, $useReadPdo);
         }
 
@@ -7459,7 +7367,7 @@ namespace Illuminate\Support\Facades {
         public static function scalar($query, $bindings = [], $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->scalar($query, $bindings, $useReadPdo);
         }
 
@@ -7474,7 +7382,7 @@ namespace Illuminate\Support\Facades {
         public static function selectFromWriteConnection($query, $bindings = [])
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->selectFromWriteConnection($query, $bindings);
         }
 
@@ -7490,7 +7398,7 @@ namespace Illuminate\Support\Facades {
         public static function select($query, $bindings = [], $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->select($query, $bindings, $useReadPdo);
         }
 
@@ -7506,7 +7414,7 @@ namespace Illuminate\Support\Facades {
         public static function selectResultSets($query, $bindings = [], $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->selectResultSets($query, $bindings, $useReadPdo);
         }
 
@@ -7522,23 +7430,8 @@ namespace Illuminate\Support\Facades {
         public static function cursor($query, $bindings = [], $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->cursor($query, $bindings, $useReadPdo);
-        }
-
-        /**
-         * Run an insert statement against the database.
-         *
-         * @param string $query
-         * @param array $bindings
-         * @return bool
-         * @static
-         */
-        public static function insert($query, $bindings = [])
-        {
-            //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->insert($query, $bindings);
         }
 
         /**
@@ -7552,7 +7445,7 @@ namespace Illuminate\Support\Facades {
         public static function update($query, $bindings = [])
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->update($query, $bindings);
         }
 
@@ -7567,7 +7460,7 @@ namespace Illuminate\Support\Facades {
         public static function delete($query, $bindings = [])
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->delete($query, $bindings);
         }
 
@@ -7582,7 +7475,7 @@ namespace Illuminate\Support\Facades {
         public static function statement($query, $bindings = [])
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->statement($query, $bindings);
         }
 
@@ -7597,7 +7490,7 @@ namespace Illuminate\Support\Facades {
         public static function affectingStatement($query, $bindings = [])
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->affectingStatement($query, $bindings);
         }
 
@@ -7611,8 +7504,21 @@ namespace Illuminate\Support\Facades {
         public static function unprepared($query)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->unprepared($query);
+        }
+
+        /**
+         * Get the number of open connections for the database.
+         *
+         * @return int|null
+         * @static
+         */
+        public static function threadCount()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->threadCount();
         }
 
         /**
@@ -7625,7 +7531,7 @@ namespace Illuminate\Support\Facades {
         public static function pretend($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->pretend($callback);
         }
 
@@ -7639,7 +7545,7 @@ namespace Illuminate\Support\Facades {
         public static function withoutPretending($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->withoutPretending($callback);
         }
 
@@ -7654,7 +7560,7 @@ namespace Illuminate\Support\Facades {
         public static function bindValues($statement, $bindings)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->bindValues($statement, $bindings);
         }
 
@@ -7668,7 +7574,7 @@ namespace Illuminate\Support\Facades {
         public static function prepareBindings($bindings)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->prepareBindings($bindings);
         }
 
@@ -7684,7 +7590,7 @@ namespace Illuminate\Support\Facades {
         public static function logQuery($query, $bindings, $time = null)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->logQuery($query, $bindings, $time);
         }
 
@@ -7699,7 +7605,7 @@ namespace Illuminate\Support\Facades {
         public static function whenQueryingForLongerThan($threshold, $handler)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->whenQueryingForLongerThan($threshold, $handler);
         }
 
@@ -7712,7 +7618,7 @@ namespace Illuminate\Support\Facades {
         public static function allowQueryDurationHandlersToRunAgain()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->allowQueryDurationHandlersToRunAgain();
         }
 
@@ -7725,7 +7631,7 @@ namespace Illuminate\Support\Facades {
         public static function totalQueryDuration()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->totalQueryDuration();
         }
 
@@ -7738,7 +7644,7 @@ namespace Illuminate\Support\Facades {
         public static function resetTotalQueryDuration()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->resetTotalQueryDuration();
         }
 
@@ -7751,7 +7657,7 @@ namespace Illuminate\Support\Facades {
         public static function reconnectIfMissingConnection()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->reconnectIfMissingConnection();
         }
 
@@ -7759,13 +7665,13 @@ namespace Illuminate\Support\Facades {
          * Register a hook to be run just before a database transaction is started.
          *
          * @param \Closure $callback
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function beforeStartingTransaction($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->beforeStartingTransaction($callback);
         }
 
@@ -7773,13 +7679,13 @@ namespace Illuminate\Support\Facades {
          * Register a hook to be run just before a database query is executed.
          *
          * @param \Closure $callback
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function beforeExecuting($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->beforeExecuting($callback);
         }
 
@@ -7793,7 +7699,7 @@ namespace Illuminate\Support\Facades {
         public static function listen($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->listen($callback);
         }
 
@@ -7807,7 +7713,7 @@ namespace Illuminate\Support\Facades {
         public static function raw($value)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->raw($value);
         }
 
@@ -7822,7 +7728,7 @@ namespace Illuminate\Support\Facades {
         public static function escape($value, $binary = false)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->escape($value, $binary);
         }
 
@@ -7835,7 +7741,7 @@ namespace Illuminate\Support\Facades {
         public static function hasModifiedRecords()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->hasModifiedRecords();
         }
 
@@ -7849,7 +7755,7 @@ namespace Illuminate\Support\Facades {
         public static function recordsHaveBeenModified($value = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->recordsHaveBeenModified($value);
         }
 
@@ -7857,13 +7763,13 @@ namespace Illuminate\Support\Facades {
          * Set the record modification state.
          *
          * @param bool $value
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setRecordModificationState($value)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setRecordModificationState($value);
         }
 
@@ -7876,7 +7782,7 @@ namespace Illuminate\Support\Facades {
         public static function forgetRecordModificationState()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->forgetRecordModificationState();
         }
 
@@ -7884,13 +7790,13 @@ namespace Illuminate\Support\Facades {
          * Indicate that the connection should use the write PDO connection for reads.
          *
          * @param bool $value
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function useWriteConnectionWhenReading($value = true)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->useWriteConnectionWhenReading($value);
         }
 
@@ -7903,7 +7809,7 @@ namespace Illuminate\Support\Facades {
         public static function getPdo()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getPdo();
         }
 
@@ -7916,7 +7822,7 @@ namespace Illuminate\Support\Facades {
         public static function getRawPdo()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getRawPdo();
         }
 
@@ -7929,7 +7835,7 @@ namespace Illuminate\Support\Facades {
         public static function getReadPdo()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getReadPdo();
         }
 
@@ -7942,7 +7848,7 @@ namespace Illuminate\Support\Facades {
         public static function getRawReadPdo()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getRawReadPdo();
         }
 
@@ -7950,13 +7856,13 @@ namespace Illuminate\Support\Facades {
          * Set the PDO connection.
          *
          * @param \PDO|\Closure|null $pdo
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setPdo($pdo);
         }
 
@@ -7964,13 +7870,13 @@ namespace Illuminate\Support\Facades {
          * Set the PDO connection used for reading.
          *
          * @param \PDO|\Closure|null $pdo
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setReadPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setReadPdo($pdo);
         }
 
@@ -7983,7 +7889,7 @@ namespace Illuminate\Support\Facades {
         public static function getName()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getName();
         }
 
@@ -7996,7 +7902,7 @@ namespace Illuminate\Support\Facades {
         public static function getNameWithReadWriteType()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getNameWithReadWriteType();
         }
 
@@ -8010,8 +7916,21 @@ namespace Illuminate\Support\Facades {
         public static function getConfig($option = null)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getConfig($option);
+        }
+
+        /**
+         * Get the PDO driver name.
+         *
+         * @return string
+         * @static
+         */
+        public static function getDriverName()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->getDriverName();
         }
 
         /**
@@ -8023,7 +7942,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getQueryGrammar();
         }
 
@@ -8031,13 +7950,13 @@ namespace Illuminate\Support\Facades {
          * Set the query grammar used by the connection.
          *
          * @param \Illuminate\Database\Query\Grammars\Grammar $grammar
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setQueryGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setQueryGrammar($grammar);
         }
 
@@ -8050,7 +7969,7 @@ namespace Illuminate\Support\Facades {
         public static function getSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getSchemaGrammar();
         }
 
@@ -8058,13 +7977,13 @@ namespace Illuminate\Support\Facades {
          * Set the schema grammar used by the connection.
          *
          * @param \Illuminate\Database\Schema\Grammars\Grammar $grammar
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setSchemaGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setSchemaGrammar($grammar);
         }
 
@@ -8077,7 +7996,7 @@ namespace Illuminate\Support\Facades {
         public static function getPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getPostProcessor();
         }
 
@@ -8085,13 +8004,13 @@ namespace Illuminate\Support\Facades {
          * Set the query post processor used by the connection.
          *
          * @param \Illuminate\Database\Query\Processors\Processor $processor
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setPostProcessor($processor)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setPostProcessor($processor);
         }
 
@@ -8104,7 +8023,7 @@ namespace Illuminate\Support\Facades {
         public static function getEventDispatcher()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getEventDispatcher();
         }
 
@@ -8112,13 +8031,13 @@ namespace Illuminate\Support\Facades {
          * Set the event dispatcher instance on the connection.
          *
          * @param \Illuminate\Contracts\Events\Dispatcher $events
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setEventDispatcher($events)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setEventDispatcher($events);
         }
 
@@ -8131,7 +8050,7 @@ namespace Illuminate\Support\Facades {
         public static function unsetEventDispatcher()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->unsetEventDispatcher();
         }
 
@@ -8139,13 +8058,13 @@ namespace Illuminate\Support\Facades {
          * Set the transaction manager instance on the connection.
          *
          * @param \Illuminate\Database\DatabaseTransactionsManager $manager
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setTransactionManager($manager)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setTransactionManager($manager);
         }
 
@@ -8158,7 +8077,7 @@ namespace Illuminate\Support\Facades {
         public static function unsetTransactionManager()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->unsetTransactionManager();
         }
 
@@ -8171,7 +8090,7 @@ namespace Illuminate\Support\Facades {
         public static function pretending()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->pretending();
         }
 
@@ -8184,7 +8103,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getQueryLog();
         }
 
@@ -8197,7 +8116,7 @@ namespace Illuminate\Support\Facades {
         public static function getRawQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getRawQueryLog();
         }
 
@@ -8210,8 +8129,34 @@ namespace Illuminate\Support\Facades {
         public static function flushQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->flushQueryLog();
+        }
+
+        /**
+         * Enable the query log on the connection.
+         *
+         * @return void
+         * @static
+         */
+        public static function enableQueryLog()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            $instance->enableQueryLog();
+        }
+
+        /**
+         * Disable the query log on the connection.
+         *
+         * @return void
+         * @static
+         */
+        public static function disableQueryLog()
+        {
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            $instance->disableQueryLog();
         }
 
         /**
@@ -8223,7 +8168,7 @@ namespace Illuminate\Support\Facades {
         public static function logging()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->logging();
         }
 
@@ -8236,7 +8181,7 @@ namespace Illuminate\Support\Facades {
         public static function getDatabaseName()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getDatabaseName();
         }
 
@@ -8244,13 +8189,13 @@ namespace Illuminate\Support\Facades {
          * Set the name of the connected database.
          *
          * @param string $database
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setDatabaseName($database)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setDatabaseName($database);
         }
 
@@ -8258,13 +8203,13 @@ namespace Illuminate\Support\Facades {
          * Set the read / write type of the connection.
          *
          * @param string|null $readWriteType
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setReadWriteType($readWriteType)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setReadWriteType($readWriteType);
         }
 
@@ -8277,7 +8222,7 @@ namespace Illuminate\Support\Facades {
         public static function getTablePrefix()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->getTablePrefix();
         }
 
@@ -8285,13 +8230,13 @@ namespace Illuminate\Support\Facades {
          * Set the table prefix in use by the connection.
          *
          * @param string $prefix
-         * @return \MongoDB\Laravel\Connection
+         * @return \Illuminate\Database\MySqlConnection
          * @static
          */
         public static function setTablePrefix($prefix)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->setTablePrefix($prefix);
         }
 
@@ -8305,7 +8250,7 @@ namespace Illuminate\Support\Facades {
         public static function withoutTablePrefix($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->withoutTablePrefix($callback);
         }
 
@@ -8320,7 +8265,7 @@ namespace Illuminate\Support\Facades {
         public static function resolverFor($driver, $callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            \MongoDB\Laravel\Connection::resolverFor($driver, $callback);
+            \Illuminate\Database\MySqlConnection::resolverFor($driver, $callback);
         }
 
         /**
@@ -8333,52 +8278,67 @@ namespace Illuminate\Support\Facades {
         public static function getResolver($driver)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            return \MongoDB\Laravel\Connection::getResolver($driver);
+            return \Illuminate\Database\MySqlConnection::getResolver($driver);
         }
 
         /**
-         * Static transaction function realize the with_transaction functionality provided by MongoDB.
-         *
+         * @template TReturn of mixed
+         * 
+         * Execute a Closure within a transaction.
+         * @param (\Closure(static): TReturn) $callback
          * @param int $attempts
+         * @return TReturn
+         * @throws \Throwable
          * @static
          */
-        public static function transaction($callback, $attempts = 1, $options = [])
+        public static function transaction($callback, $attempts = 1)
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->transaction($callback, $attempts, $options);
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            return $instance->transaction($callback, $attempts);
         }
 
         /**
-         * Starts a transaction on the active session. An active session will be created if none exists.
+         * Start a new database transaction.
          *
+         * @return void
+         * @throws \Throwable
          * @static
          */
-        public static function beginTransaction($options = [])
+        public static function beginTransaction()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->beginTransaction($options);
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            $instance->beginTransaction();
         }
 
         /**
-         * Commit transaction in this session.
+         * Commit the active database transaction.
          *
+         * @return void
+         * @throws \Throwable
          * @static
          */
         public static function commit()
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->commit();
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            $instance->commit();
         }
 
         /**
-         * Abort transaction in this session.
+         * Rollback the active database transaction.
          *
+         * @param int|null $toLevel
+         * @return void
+         * @throws \Throwable
          * @static
          */
         public static function rollBack($toLevel = null)
         {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->rollBack($toLevel);
+            //Method inherited from \Illuminate\Database\Connection 
+            /** @var \Illuminate\Database\MySqlConnection $instance */
+            $instance->rollBack($toLevel);
         }
 
         /**
@@ -8390,7 +8350,7 @@ namespace Illuminate\Support\Facades {
         public static function transactionLevel()
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             return $instance->transactionLevel();
         }
 
@@ -8405,17 +8365,8 @@ namespace Illuminate\Support\Facades {
         public static function afterCommit($callback)
         {
             //Method inherited from \Illuminate\Database\Connection 
-            /** @var \MongoDB\Laravel\Connection $instance */
+            /** @var \Illuminate\Database\MySqlConnection $instance */
             $instance->afterCommit($callback);
-        }
-
-        /**
-         * @static
-         */
-        public static function getSession()
-        {
-            /** @var \MongoDB\Laravel\Connection $instance */
-            return $instance->getSession();
         }
 
             }
@@ -18180,189 +18131,39 @@ namespace Illuminate\Support\Facades {
      */
     class Schema {
         /**
-         * Check if column exists in the collection schema.
+         * Drop all tables from the database.
          *
-         * @param string $table
-         * @param string $column
-         * @static
-         */
-        public static function hasColumn($table, $column)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->hasColumn($table, $column);
-        }
-
-        /**
-         * Check if columns exist in the collection schema.
-         *
-         * @param string $table
-         * @param string[] $columns
-         * @static
-         */
-        public static function hasColumns($table, $columns)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->hasColumns($table, $columns);
-        }
-
-        /**
-         * Determine if the given collection exists.
-         *
-         * @param string $name
-         * @return bool
-         * @static
-         */
-        public static function hasCollection($name)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->hasCollection($name);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function hasTable($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->hasTable($table);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function table($table, $callback)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->table($table, $callback);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function create($table, $callback = null, $options = [])
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->create($table, $callback, $options);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function dropIfExists($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->dropIfExists($table);
-        }
-
-        /**
-         * @inheritdoc
-         * @static
-         */
-        public static function drop($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->drop($table);
-        }
-
-        /**
-         * @inheritdoc Drops the entire database instead of deleting each collection individually.
-         * 
-         * In MongoDB, dropping the whole database is much faster than dropping collections
-         * one by one. The database will be automatically recreated when a new connection
-         * writes to it.
+         * @return void
          * @static
          */
         public static function dropAllTables()
         {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->dropAllTables();
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->dropAllTables();
         }
 
         /**
-         * @param string|null $schema Database name
-         * @inheritdoc
-         * @static
-         */
-        public static function getTables($schema = null)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getTables($schema);
-        }
-
-        /**
-         * @param string|null $schema Database name
-         * @inheritdoc
-         * @static
-         */
-        public static function getViews($schema = null)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getViews($schema);
-        }
-
-        /**
-         * @param string|null $schema
-         * @param bool $schemaQualified If a schema is provided, prefix the collection names with the schema name
-         * @return array
-         * @static
-         */
-        public static function getTableListing($schema = null, $schemaQualified = false)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getTableListing($schema, $schemaQualified);
-        }
-
-        /**
-         * @static
-         */
-        public static function getColumns($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getColumns($table);
-        }
-
-        /**
-         * @static
-         */
-        public static function getIndexes($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getIndexes($table);
-        }
-
-        /**
-         * @static
-         */
-        public static function getForeignKeys($table)
-        {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getForeignKeys($table);
-        }
-
-        /**
-         * Get collection.
+         * Drop all views from the database.
          *
-         * @param string $name
-         * @return bool|\MongoDB\Model\CollectionInfo
+         * @return void
          * @static
          */
-        public static function getCollection($name)
+        public static function dropAllViews()
         {
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getCollection($name);
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->dropAllViews();
         }
 
         /**
-         * @internal
+         * Get the names of current schemas for the connection.
+         *
+         * @return string[]|null
          * @static
          */
-        public static function isAtlasSearchNotSupportedException($e)
+        public static function getCurrentSchemaListing()
         {
-            return \MongoDB\Laravel\Schema\Builder::isAtlasSearchNotSupportedException($e);
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getCurrentSchemaListing();
         }
 
         /**
@@ -18375,7 +18176,7 @@ namespace Illuminate\Support\Facades {
         public static function defaultStringLength($length)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::defaultStringLength($length);
+            \Illuminate\Database\Schema\MySqlBuilder::defaultStringLength($length);
         }
 
         /**
@@ -18386,7 +18187,7 @@ namespace Illuminate\Support\Facades {
         public static function defaultTimePrecision($precision)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            return \MongoDB\Laravel\Schema\Builder::defaultTimePrecision($precision);
+            return \Illuminate\Database\Schema\MySqlBuilder::defaultTimePrecision($precision);
         }
 
         /**
@@ -18400,7 +18201,7 @@ namespace Illuminate\Support\Facades {
         public static function defaultMorphKeyType($type)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::defaultMorphKeyType($type);
+            \Illuminate\Database\Schema\MySqlBuilder::defaultMorphKeyType($type);
         }
 
         /**
@@ -18412,7 +18213,7 @@ namespace Illuminate\Support\Facades {
         public static function morphUsingUuids()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::morphUsingUuids();
+            \Illuminate\Database\Schema\MySqlBuilder::morphUsingUuids();
         }
 
         /**
@@ -18424,7 +18225,7 @@ namespace Illuminate\Support\Facades {
         public static function morphUsingUlids()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::morphUsingUlids();
+            \Illuminate\Database\Schema\MySqlBuilder::morphUsingUlids();
         }
 
         /**
@@ -18437,7 +18238,7 @@ namespace Illuminate\Support\Facades {
         public static function createDatabase($name)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->createDatabase($name);
         }
 
@@ -18451,7 +18252,7 @@ namespace Illuminate\Support\Facades {
         public static function dropDatabaseIfExists($name)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->dropDatabaseIfExists($name);
         }
 
@@ -18464,8 +18265,22 @@ namespace Illuminate\Support\Facades {
         public static function getSchemas()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getSchemas();
+        }
+
+        /**
+         * Determine if the given table exists.
+         *
+         * @param string $table
+         * @return bool
+         * @static
+         */
+        public static function hasTable($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->hasTable($table);
         }
 
         /**
@@ -18478,8 +18293,51 @@ namespace Illuminate\Support\Facades {
         public static function hasView($view)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->hasView($view);
+        }
+
+        /**
+         * Get the tables that belong to the connection.
+         *
+         * @param string|string[]|null $schema
+         * @return \Illuminate\Database\Schema\list<array{name: string, schema: string|null, schema_qualified_name: string, size: int|null, comment: string|null, collation: string|null, engine: string|null}>
+         * @static
+         */
+        public static function getTables($schema = null)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getTables($schema);
+        }
+
+        /**
+         * Get the names of the tables that belong to the connection.
+         *
+         * @param string|string[]|null $schema
+         * @param bool $schemaQualified
+         * @return list<string>
+         * @static
+         */
+        public static function getTableListing($schema = null, $schemaQualified = true)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getTableListing($schema, $schemaQualified);
+        }
+
+        /**
+         * Get the views that belong to the connection.
+         *
+         * @param string|string[]|null $schema
+         * @return \Illuminate\Database\Schema\list<array{name: string, schema: string|null, schema_qualified_name: string, definition: string}>
+         * @static
+         */
+        public static function getViews($schema = null)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getViews($schema);
         }
 
         /**
@@ -18492,8 +18350,38 @@ namespace Illuminate\Support\Facades {
         public static function getTypes($schema = null)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getTypes($schema);
+        }
+
+        /**
+         * Determine if the given table has a given column.
+         *
+         * @param string $table
+         * @param string $column
+         * @return bool
+         * @static
+         */
+        public static function hasColumn($table, $column)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->hasColumn($table, $column);
+        }
+
+        /**
+         * Determine if the given table has given columns.
+         *
+         * @param string $table
+         * @param array<string> $columns
+         * @return bool
+         * @static
+         */
+        public static function hasColumns($table, $columns)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->hasColumns($table, $columns);
         }
 
         /**
@@ -18508,7 +18396,7 @@ namespace Illuminate\Support\Facades {
         public static function whenTableHasColumn($table, $column, $callback)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->whenTableHasColumn($table, $column, $callback);
         }
 
@@ -18524,7 +18412,7 @@ namespace Illuminate\Support\Facades {
         public static function whenTableDoesntHaveColumn($table, $column, $callback)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->whenTableDoesntHaveColumn($table, $column, $callback);
         }
 
@@ -18540,7 +18428,7 @@ namespace Illuminate\Support\Facades {
         public static function getColumnType($table, $column, $fullDefinition = false)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getColumnType($table, $column, $fullDefinition);
         }
 
@@ -18554,8 +18442,36 @@ namespace Illuminate\Support\Facades {
         public static function getColumnListing($table)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getColumnListing($table);
+        }
+
+        /**
+         * Get the columns for a given table.
+         *
+         * @param string $table
+         * @return \Illuminate\Database\Schema\list<array{name: string, type: string, type_name: string, nullable: bool, default: mixed, auto_increment: bool, comment: string|null, generation: array{type: string, expression: string|null}|null}>
+         * @static
+         */
+        public static function getColumns($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getColumns($table);
+        }
+
+        /**
+         * Get the indexes for a given table.
+         *
+         * @param string $table
+         * @return \Illuminate\Database\Schema\list<array{name: string, columns: list<string>, type: string, unique: bool, primary: bool}>
+         * @static
+         */
+        public static function getIndexes($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getIndexes($table);
         }
 
         /**
@@ -18568,7 +18484,7 @@ namespace Illuminate\Support\Facades {
         public static function getIndexListing($table)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getIndexListing($table);
         }
 
@@ -18584,8 +18500,80 @@ namespace Illuminate\Support\Facades {
         public static function hasIndex($table, $index, $type = null)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->hasIndex($table, $index, $type);
+        }
+
+        /**
+         * Get the foreign keys for a given table.
+         *
+         * @param string $table
+         * @return array
+         * @static
+         */
+        public static function getForeignKeys($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            return $instance->getForeignKeys($table);
+        }
+
+        /**
+         * Modify a table on the schema.
+         *
+         * @param string $table
+         * @param \Closure $callback
+         * @return void
+         * @static
+         */
+        public static function table($table, $callback)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->table($table, $callback);
+        }
+
+        /**
+         * Create a new table on the schema.
+         *
+         * @param string $table
+         * @param \Closure $callback
+         * @return void
+         * @static
+         */
+        public static function create($table, $callback)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->create($table, $callback);
+        }
+
+        /**
+         * Drop a table from the schema.
+         *
+         * @param string $table
+         * @return void
+         * @static
+         */
+        public static function drop($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->drop($table);
+        }
+
+        /**
+         * Drop a table from the schema if it exists.
+         *
+         * @param string $table
+         * @return void
+         * @static
+         */
+        public static function dropIfExists($table)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+            $instance->dropIfExists($table);
         }
 
         /**
@@ -18599,22 +18587,8 @@ namespace Illuminate\Support\Facades {
         public static function dropColumns($table, $columns)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->dropColumns($table, $columns);
-        }
-
-        /**
-         * Drop all views from the database.
-         *
-         * @return void
-         * @throws \LogicException
-         * @static
-         */
-        public static function dropAllViews()
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            $instance->dropAllViews();
         }
 
         /**
@@ -18627,7 +18601,7 @@ namespace Illuminate\Support\Facades {
         public static function dropAllTypes()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->dropAllTypes();
         }
 
@@ -18642,7 +18616,7 @@ namespace Illuminate\Support\Facades {
         public static function rename($from, $to)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->rename($from, $to);
         }
 
@@ -18655,7 +18629,7 @@ namespace Illuminate\Support\Facades {
         public static function enableForeignKeyConstraints()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->enableForeignKeyConstraints();
         }
 
@@ -18668,7 +18642,7 @@ namespace Illuminate\Support\Facades {
         public static function disableForeignKeyConstraints()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->disableForeignKeyConstraints();
         }
 
@@ -18682,21 +18656,8 @@ namespace Illuminate\Support\Facades {
         public static function withoutForeignKeyConstraints($callback)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->withoutForeignKeyConstraints($callback);
-        }
-
-        /**
-         * Get the names of the current schemas for the connection.
-         *
-         * @return string[]|null
-         * @static
-         */
-        public static function getCurrentSchemaListing()
-        {
-            //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
-            return $instance->getCurrentSchemaListing();
         }
 
         /**
@@ -18708,7 +18669,7 @@ namespace Illuminate\Support\Facades {
         public static function getCurrentSchemaName()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getCurrentSchemaName();
         }
 
@@ -18723,7 +18684,7 @@ namespace Illuminate\Support\Facades {
         public static function parseSchemaAndTable($reference, $withDefaultSchema = null)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->parseSchemaAndTable($reference, $withDefaultSchema);
         }
 
@@ -18736,7 +18697,7 @@ namespace Illuminate\Support\Facades {
         public static function getConnection()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             return $instance->getConnection();
         }
 
@@ -18750,7 +18711,7 @@ namespace Illuminate\Support\Facades {
         public static function blueprintResolver($resolver)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            /** @var \MongoDB\Laravel\Schema\Builder $instance */
+            /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
             $instance->blueprintResolver($resolver);
         }
 
@@ -18766,7 +18727,7 @@ namespace Illuminate\Support\Facades {
         public static function macro($name, $macro)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::macro($name, $macro);
+            \Illuminate\Database\Schema\MySqlBuilder::macro($name, $macro);
         }
 
         /**
@@ -18781,7 +18742,7 @@ namespace Illuminate\Support\Facades {
         public static function mixin($mixin, $replace = true)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::mixin($mixin, $replace);
+            \Illuminate\Database\Schema\MySqlBuilder::mixin($mixin, $replace);
         }
 
         /**
@@ -18794,7 +18755,7 @@ namespace Illuminate\Support\Facades {
         public static function hasMacro($name)
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            return \MongoDB\Laravel\Schema\Builder::hasMacro($name);
+            return \Illuminate\Database\Schema\MySqlBuilder::hasMacro($name);
         }
 
         /**
@@ -18806,7 +18767,7 @@ namespace Illuminate\Support\Facades {
         public static function flushMacros()
         {
             //Method inherited from \Illuminate\Database\Schema\Builder 
-            \MongoDB\Laravel\Schema\Builder::flushMacros();
+            \Illuminate\Database\Schema\MySqlBuilder::flushMacros();
         }
 
             }
@@ -22968,6 +22929,276 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace Opcodes\LogViewer\Facades {
+    /**
+     * @see \Opcodes\LogViewer\LogViewerService
+     */
+    class LogViewer {
+        /**
+         * @static
+         */
+        public static function timezone()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->timezone();
+        }
+
+        /**
+         * @static
+         */
+        public static function basePathForLogs()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->basePathForLogs();
+        }
+
+        /**
+         * @return \Opcodes\LogViewer\LogFileCollection|\Opcodes\LogViewer\LogFile[]
+         * @static
+         */
+        public static function getFiles()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getFiles();
+        }
+
+        /**
+         * @static
+         */
+        public static function getFilesGroupedByFolder()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getFilesGroupedByFolder();
+        }
+
+        /**
+         * Find the file with the given identifier or file name.
+         *
+         * @static
+         */
+        public static function getFile($fileIdentifier)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getFile($fileIdentifier);
+        }
+
+        /**
+         * @static
+         */
+        public static function getFolder($folderIdentifier)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getFolder($folderIdentifier);
+        }
+
+        /**
+         * @static
+         */
+        public static function supportsHostsFeature()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->supportsHostsFeature();
+        }
+
+        /**
+         * @static
+         */
+        public static function resolveHostsUsing($callback)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->resolveHostsUsing($callback);
+        }
+
+        /**
+         * @static
+         */
+        public static function getHosts()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getHosts();
+        }
+
+        /**
+         * @static
+         */
+        public static function getHost($hostIdentifier)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getHost($hostIdentifier);
+        }
+
+        /**
+         * @static
+         */
+        public static function clearFileCache()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->clearFileCache();
+        }
+
+        /**
+         * @static
+         */
+        public static function getRouteDomain()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getRouteDomain();
+        }
+
+        /**
+         * @static
+         */
+        public static function getRoutePrefix()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getRoutePrefix();
+        }
+
+        /**
+         * @static
+         */
+        public static function getRouteMiddleware()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getRouteMiddleware();
+        }
+
+        /**
+         * @static
+         */
+        public static function auth($callback = null)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->auth($callback);
+        }
+
+        /**
+         * @static
+         */
+        public static function hasAuthCallback()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->hasAuthCallback();
+        }
+
+        /**
+         * @static
+         */
+        public static function lazyScanChunkSize()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->lazyScanChunkSize();
+        }
+
+        /**
+         * @static
+         */
+        public static function lazyScanTimeout()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->lazyScanTimeout();
+        }
+
+        /**
+         * Get the maximum number of bytes of the log that we should display.
+         *
+         * @static
+         */
+        public static function maxLogSize()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->maxLogSize();
+        }
+
+        /**
+         * @static
+         */
+        public static function setMaxLogSize($bytes)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->setMaxLogSize($bytes);
+        }
+
+        /**
+         * @static
+         */
+        public static function extend($type, $class)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->extend($type, $class);
+        }
+
+        /**
+         * @static
+         */
+        public static function useLogFileClass($class)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->useLogFileClass($class);
+        }
+
+        /**
+         * @static
+         */
+        public static function useLogReaderClass($class)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->useLogReaderClass($class);
+        }
+
+        /**
+         * @static
+         */
+        public static function logReaderClass()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->logReaderClass();
+        }
+
+        /**
+         * @static
+         */
+        public static function setViewLayout($layout)
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->setViewLayout($layout);
+        }
+
+        /**
+         * @static
+         */
+        public static function getViewLayout()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->getViewLayout();
+        }
+
+        /**
+         * Determine if Log Viewer's published assets are up-to-date.
+         *
+         * @throws \RuntimeException
+         * @static
+         */
+        public static function assetsAreCurrent()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->assetsAreCurrent();
+        }
+
+        /**
+         * Get the current version of the Log Viewer
+         *
+         * @static
+         */
+        public static function version()
+        {
+            /** @var \Opcodes\LogViewer\LogViewerService $instance */
+            return $instance->version();
+        }
+
+            }
+    }
+
 namespace Illuminate\Http {
     /**
      */
@@ -23098,6 +23329,145 @@ namespace Illuminate\Testing {
         public static function inertiaProps($propName = null)
         {
             return \Illuminate\Testing\TestResponse::inertiaProps($propName);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLValidationError()
+         * @param string $key
+         * @param string|null $message
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLValidationError($key, $message)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLValidationError($key, $message);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLValidationKeys()
+         * @param array $keys
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLValidationKeys($keys)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLValidationKeys($keys);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLValidationPasses()
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLValidationPasses()
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLValidationPasses();
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLError()
+         * @param \Throwable $error
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLError($error)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLError($error);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLErrorMessage()
+         * @param string $message
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLErrorMessage($message)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLErrorMessage($message);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLDebugMessage()
+         * @param string $message
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLDebugMessage($message)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLDebugMessage($message);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLErrorFree()
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLErrorFree()
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLErrorFree();
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLSubscriptionAuthorized()
+         * @param \PHPUnit\Framework\TestCase $testClassInstance
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLSubscriptionAuthorized($testClassInstance)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLSubscriptionAuthorized($testClassInstance);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLSubscriptionNotAuthorized()
+         * @param \PHPUnit\Framework\TestCase $testClassInstance
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLSubscriptionNotAuthorized($testClassInstance)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLSubscriptionNotAuthorized($testClassInstance);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::graphQLSubscriptionMock()
+         * @return \Mockery\MockInterface
+         * @static
+         */
+        public static function graphQLSubscriptionMock()
+        {
+            return \Illuminate\Testing\TestResponse::graphQLSubscriptionMock();
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::graphQLSubscriptionChannelName()
+         * @return string
+         * @static
+         */
+        public static function graphQLSubscriptionChannelName()
+        {
+            return \Illuminate\Testing\TestResponse::graphQLSubscriptionChannelName();
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLBroadcasted()
+         * @param array $data
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLBroadcasted($data)
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLBroadcasted($data);
+        }
+
+        /**
+         * @see \Nuwave\Lighthouse\Testing\TestResponseMixin::assertGraphQLNotBroadcasted()
+         * @return \Illuminate\Testing\TestResponse
+         * @static
+         */
+        public static function assertGraphQLNotBroadcasted()
+        {
+            return \Illuminate\Testing\TestResponse::assertGraphQLNotBroadcasted();
         }
 
             }
@@ -27964,6 +28334,7 @@ namespace  {
     class Validator extends \Illuminate\Support\Facades\Validator {}
     class View extends \Illuminate\Support\Facades\View {}
     class Vite extends \Illuminate\Support\Facades\Vite {}
+    class LogViewer extends \Opcodes\LogViewer\Facades\LogViewer {}
 }
 
 
