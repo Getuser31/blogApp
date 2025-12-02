@@ -17,6 +17,9 @@ final readonly class EditArticle
             'id' => ['required', 'integer', 'exists:articles,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'content' => ['sometimes', 'string'],
+            'categoryIds' => ['nullable', 'array'],
+            'categoryIds.*' => ['exists:categories,id']
+
         ]);
 
         if ($validator->fails()) {
@@ -30,6 +33,10 @@ final readonly class EditArticle
         if (!empty($updateData)) {
             $article->fill($updateData);
             $article->save();
+        }
+
+        if (isset($args['categoryIds'])) {
+            $article->categories()->attach($args['categoryIds']);
         }
 
         return $article;

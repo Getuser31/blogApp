@@ -17,6 +17,7 @@ type Article {
     title: String!
     content: String!
     author: User! @belongsTo
+    categories: [Category!] @belongsToMany
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -28,8 +29,15 @@ type Role {
     slug: String!
 }
 
+"A category for an article."
+type Category {
+    id: ID!
+    name: String!
+    slug: String!
+}
+
 "Defines the queries available to the client."
-type Query @guard(with: ["sanctum"]) {
+type Query {
     "Find all articles, paginated."
     articles: [Article!]! @paginate(defaultCount: 10)
 
@@ -37,13 +45,16 @@ type Query @guard(with: ["sanctum"]) {
     articlesByUser(userID: ID! @eq(key: "author_id")): [Article!] @paginate(defaultCount: 10)
 
     "Find a user."
-    user(id: ID! @eq): User @find
+    user(id: ID! @eq): User @find @guard(with: ["sanctum"])
 
     "Me"
     me: User @auth
 
     "Get Article by Id"
-    article(id: ID!): Article @field(resolver: "App\\GraphQL\\Queries\\Article")
+    article(id: ID! @eq): Article @find
+
+    "Get All Categories"
+    getCategories: [Category!]! @all
 }
 
 "A token response for authentication."
@@ -57,12 +68,12 @@ type AuthPayload {
 type Mutation {
     login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
 
-    createArticle(title: String!, content: String!): Article
+    createArticle(title: String!, content: String!, categoryIds: [ID!]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
     @guard(with: ["sanctum", "admin"])
     @admin
 
-    editArticle(id: ID!, title: String, content: String): Article
+    editArticle(id: ID!, title: String, content: String, categoryIds: [ID!]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
     @guard(with: ["sanctum", "admin"])
     @admin

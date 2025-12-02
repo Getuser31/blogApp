@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -29,8 +29,8 @@ class Category extends Model
         'slug',
     ];
 
-    public function articles(): BelongsTo
+    public function articles(): BelongsToMany
     {
-        return $this->belongsTo(Article::class, 'article_category', 'category_id', 'article_id');
+        return $this->belongsToMany(Article::class, 'article_category', 'category_id', 'article_id');
     }
 }
