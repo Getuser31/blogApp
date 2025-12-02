@@ -1,6 +1,9 @@
 "A date string with format `Y-m-d H:i:s`, e.g. `2018-01-01 13:00:00`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
+"The `Upload` scalar type represents a file upload."
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
 "A user of the application."
 type User {
     id: ID!
@@ -18,6 +21,7 @@ type Article {
     content: String!
     author: User! @belongsTo
     categories: [Category!] @belongsToMany
+    images: [Image!]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -34,6 +38,14 @@ type Category {
     id: ID!
     name: String!
     slug: String!
+}
+
+"An image for an article."
+type Image {
+    id: ID!
+    path: String!
+    created_at: DateTime!
+    updated_at: DateTime!
 }
 
 "Defines the queries available to the client."
@@ -68,7 +80,7 @@ type AuthPayload {
 type Mutation {
     login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
 
-    createArticle(title: String!, content: String!, categoryIds: [ID!]): Article
+    createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
     @guard(with: ["sanctum", "admin"])
     @admin

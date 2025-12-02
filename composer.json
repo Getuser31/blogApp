@@ -15,6 +15,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.62",
         "opcodesio/log-viewer": "^3.21"
