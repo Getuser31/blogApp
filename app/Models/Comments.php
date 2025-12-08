@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Comments newModelQuery()
@@ -14,5 +15,17 @@ class Comments extends Model
 {
     protected $fillable = [
         'content',
+        'user_id',
+        'article_id'
     ];
+
+    public function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

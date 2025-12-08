@@ -22,6 +22,7 @@ type Article {
     author: User! @belongsTo
     categories: [Category!] @belongsToMany
     images: [Image!]! @hasMany
+    comments: [Comment!] @hasMany
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -46,6 +47,13 @@ type Image {
     path: String!
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+type Comment {
+    id: ID!
+    content: String!
+    created_at: DateTime!
+    user: User! @belongsTo
 }
 
 "Defines the queries available to the client."
@@ -89,4 +97,8 @@ type Mutation {
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
     @guard(with: ["sanctum", "admin"])
     @admin
+
+    addComment(articleId: ID!, content: String!): Comment
+    @field(resolver: "App\\GraphQL\\Mutations\\AddComment")
+    @guard(with: ["sanctum"])
 }

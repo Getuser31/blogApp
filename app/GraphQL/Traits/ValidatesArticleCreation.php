@@ -2,12 +2,14 @@
 
 namespace App\GraphQL\Traits;
 
+use Illuminate\Contracts\Validation\ValidationRule;
+
 trait ValidatesArticleCreation
 {
     /**
      * Get the validation rules for creating an article.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     protected function rules(): array
     {

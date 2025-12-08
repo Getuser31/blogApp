@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Article;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -11,7 +12,7 @@ final readonly class EditArticle
     /** @param array{} $args
      * @throws ValidationException
      */
-    public function __invoke(null $_, array $args): Article|\Illuminate\Database\Eloquent\Collection
+    public function __invoke(null $_, array $args): Article|Collection
     {
         $validator = Validator::make($args, [
             'id' => ['required', 'integer', 'exists:articles,id'],
