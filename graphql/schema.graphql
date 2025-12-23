@@ -93,12 +93,16 @@ type Mutation {
     @guard(with: ["sanctum", "admin"])
     @admin
 
-    editArticle(id: ID!, title: String, content: String, categoryIds: [ID!]): Article
+    editArticle(id: ID!, title: String, content: String, categoryIds: [ID!], images: [Upload]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
     @guard(with: ["sanctum", "admin"])
     @admin
 
     addComment(articleId: ID!, content: String!): Comment
     @field(resolver: "App\\GraphQL\\Mutations\\AddComment")
+    @guard(with: ["sanctum"])
+
+    deleteImage(id: ID!): Image
+    @field(resolver: "App\\GraphQL\\Mutations\\DeleteImage")
     @guard(with: ["sanctum"])
 }
