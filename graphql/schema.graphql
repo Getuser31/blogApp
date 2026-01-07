@@ -105,4 +105,7 @@ type Mutation {
     deleteImage(id: ID!): Image
     @field(resolver: "App\\GraphQL\\Mutations\\DeleteImage")
     @guard(with: ["sanctum"])
+
+    addUser(username: String!, password: String!, passwordRepeat: String!, email: String!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\AddUser")
 }

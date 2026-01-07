@@ -19,7 +19,7 @@ trait ValidatesArticleCreation
             'categoryIds' => ['nullable', 'array'],
             'categoryIds.*' => ['exists:categories,id'],
             'images' => ['nullable', 'array'],
-            'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:10120'],
+            'images.*' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10120'],
         ];
     }
 }
