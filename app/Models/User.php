@@ -5,6 +5,8 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\DatabaseNotification;
@@ -72,9 +74,19 @@ class User extends Authenticatable
     ];
 
 
-    public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function articles(): HasMany
     {
         return $this->hasMany(Article::class, 'author_id');
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comments::class);
+    }
+
+    public function commentedArticles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'comments', 'user_id', 'article_id')->distinct();
     }
 
     public function role(): BelongsTo

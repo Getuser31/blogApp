@@ -10,6 +10,19 @@ type User {
     name: String!
     email: String!
     role: Role! @belongsTo
+    articles(
+        "Limit the number of articles returned."
+        limit: Int @limit
+        "Order the articles."
+        orderBy: [OrderByClause!] @orderBy
+    ): [Article!]! @hasMany
+    comments(
+        "Limit the number of comments returned."
+        limit: Int @limit
+        "Order the comments."
+        orderBy: [OrderByClause!] @orderBy
+    ): [Comment!]! @hasMany
+    commentedArticles: [Article!]! @belongsToMany
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -22,13 +35,18 @@ type Article {
     author: User! @belongsTo
     categories: [Category!] @belongsToMany
     images: [Image!]! @hasMany
-    comments: [Comment!] @hasMany
+    comments(
+        "Limit the number of comments returned."
+        limit: Int @limit
+        "Order the comments."
+        orderBy: [OrderByClause!] @orderBy
+    ): [Comment!] @hasMany
     created_at: DateTime!
     updated_at: DateTime!
 }
 
 "A role for a user."
-type Role {
+type Role @model(class: "App\\Models\\Roles") {
     id: ID!
     name: String!
     slug: String!
@@ -42,18 +60,19 @@ type Category {
 }
 
 "An image for an article."
-type Image {
+type Image @model(class: "App\\Models\\Images") {
     id: ID!
     path: String!
     created_at: DateTime!
     updated_at: DateTime!
 }
 
-type Comment {
+type Comment @model(class: "App\\Models\\Comments") {
     id: ID!
     content: String!
     created_at: DateTime!
     user: User! @belongsTo
+    article: Article! @belongsTo
 }
 
 "Defines the queries available to the client."
@@ -69,6 +88,9 @@ type Query {
 
     "Me"
     me: User @auth
+
+    "Get All User Data."
+    getUserData(id: ID! @eq): User @find
 
     "Get Article by Id"
     article(id: ID! @eq): Article @find
