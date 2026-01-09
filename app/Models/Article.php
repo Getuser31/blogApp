@@ -65,4 +65,11 @@ class Article extends Model
     {
         return $this->hasMany(Comments::class);
     }
+
+    public function scopeCategoryId(Builder $query, $categoryId): Builder
+    {
+        return $query->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.id', $categoryId);
+        });
+    }
 }

@@ -79,7 +79,10 @@ type Comment @model(class: "App\\Models\\Comments") {
 "Defines the queries available to the client."
 type Query {
     "Find all published articles, paginated."
-    publishedArticles: [Article!]! @paginate(defaultCount: 10) @where(key: "published", value: true)
+    publishedArticles(
+        "Filter by category ID."
+        category_id: ID @scope(name: "categoryId")
+    ): [Article!]! @paginate(defaultCount: 10) @where(key: "published", value: true) @orderBy(column: "created_at", direction: DESC)
 
     "Find all article by a specific user, paginated"
     articlesByUser(userID: ID! @eq(key: "author_id")): [Article!] @paginate(defaultCount: 10)
