@@ -43,6 +43,7 @@ type Article {
     ): [Comment!] @hasMany
     created_at: DateTime!
     updated_at: DateTime!
+    published: Boolean!
 }
 
 "A role for a user."
@@ -77,8 +78,8 @@ type Comment @model(class: "App\\Models\\Comments") {
 
 "Defines the queries available to the client."
 type Query {
-    "Find all articles, paginated."
-    articles: [Article!]! @paginate(defaultCount: 10)
+    "Find all published articles, paginated."
+    publishedArticles: [Article!]! @paginate(defaultCount: 10) @where(key: "published", value: true)
 
     "Find all article by a specific user, paginated"
     articlesByUser(userID: ID! @eq(key: "author_id")): [Article!] @paginate(defaultCount: 10)
@@ -91,6 +92,9 @@ type Query {
 
     "Get All User Data."
     getUserData(id: ID! @eq): User @find
+
+    "Get All articles for a user"
+    userArticles: User @auth @guard(with: ["sanctum"])
 
     "Get Article by Id"
     article(id: ID! @eq): Article @find

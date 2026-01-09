@@ -40,6 +40,7 @@ class Article extends Model
         'title',
         'content',
         'author_id',
+        'published'
     ];
 
     /**
