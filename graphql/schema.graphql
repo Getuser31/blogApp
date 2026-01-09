@@ -134,4 +134,10 @@ type Mutation {
 
     addUser(username: String!, password: String!, passwordRepeat: String!, email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\AddUser")
+
+    addCategory(name: String!): Category
+    @field(resolver: "App\\GraphQL\\Mutations\\AddCategory")
+
+    deleteCategory(id: ID!): Category
+    @field(resolver: "App\\GraphQL\\Mutations\\DeleteCategory")
 }
