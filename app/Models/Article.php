@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
@@ -51,6 +52,11 @@ class Article extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function favoritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorite_articles_users', 'article_id', 'user_id')->distinct();
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'article_category', 'article_id', 'category_id');
@@ -76,5 +82,15 @@ class Article extends Model
     public function scopeSearch(Builder $query, $search): Builder
     {
         return $query->where('title', 'like', '%' . $search . '%');
+    }
+
+    public function isFavorite(): bool
+    {
+        $user = Auth::guard('sanctum')->user();
+        if (!$user) {
+            return false;
+        }
+
+        return $this->favoritedByUsers()->where('user_id', $user->id)->exists();
     }
 }

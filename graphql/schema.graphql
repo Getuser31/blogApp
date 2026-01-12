@@ -23,6 +23,7 @@ type User {
         orderBy: [OrderByClause!] @orderBy
     ): [Comment!]! @hasMany
     commentedArticles: [Article!]! @belongsToMany
+    favoriteArticles: [Article!]! @belongsToMany(relation: "favoriteArticles")
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -44,6 +45,7 @@ type Article {
     created_at: DateTime!
     updated_at: DateTime!
     published: Boolean!
+    isFavorite: Boolean! @method(name: "isFavorite")
 }
 
 "A role for a user."
@@ -107,6 +109,9 @@ type Query {
 
     "Search in Articles"
     searchArticles(search: String! @scope(name: "search")): [Article!]! @paginate(defaultCount: 10)
+
+    "Get Favorite Articles for User"
+    getFavoriteArticles: User @auth @guard(with: ["sanctum"])
 }
 
 "A token response for authentication."
@@ -146,4 +151,7 @@ type Mutation {
 
     deleteCategory(id: ID!): Category
     @field(resolver: "App\\GraphQL\\Mutations\\DeleteCategory")
+
+    addFavoriteArticle(articleId: ID!): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\AddFavoriteArticle")
 }

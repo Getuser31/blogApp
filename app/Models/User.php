@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -84,6 +85,11 @@ class User extends Authenticatable
         return $this->hasMany(Comments::class);
     }
 
+    public function favoriteArticles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'favorite_articles_users', 'user_id', 'article_id')->distinct();
+    }
+
     public function commentedArticles(): BelongsToMany
     {
         return $this->belongsToMany(Article::class, 'comments', 'user_id', 'article_id')->distinct();
@@ -115,5 +121,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function hasFavorited(): bool
+    {
+        return $this->favoriteArticles()->count() > 0;
+    }
+
+    public function getFavoriteArticles(): Collection
+    {
+        return $this->favoriteArticles()->get();
     }
 }
