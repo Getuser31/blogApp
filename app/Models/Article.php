@@ -72,4 +72,9 @@ class Article extends Model
             $q->where('categories.id', $categoryId);
         });
     }
+
+    public function scopeSearch(Builder $query, $search): Builder
+    {
+        return $query->where('title', 'like', '%' . $search . '%');
+    }
 }

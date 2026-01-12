@@ -104,6 +104,9 @@ type Query {
 
     "Get All Categories"
     getCategories: [Category!]! @all
+
+    "Search in Articles"
+    searchArticles(search: String! @scope(name: "search")): [Article!]! @paginate(defaultCount: 10)
 }
 
 "A token response for authentication."
