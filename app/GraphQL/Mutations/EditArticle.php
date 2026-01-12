@@ -45,7 +45,7 @@ final readonly class EditArticle
         }
 
         if (isset($args['categoryIds'])) {
-            $article->categories()->attach($args['categoryIds']);
+            $article->categories()->sync($args['categoryIds']);
         }
 
         if (isset($args['images'])) {
