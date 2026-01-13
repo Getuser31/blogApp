@@ -90,6 +90,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Article::class, 'favorite_articles_users', 'user_id', 'article_id')->distinct();
     }
 
+    public function lastReadArticles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'last_read_article', 'user_id', 'article_id')->distinct();
+    }
+
     public function commentedArticles(): BelongsToMany
     {
         return $this->belongsToMany(Article::class, 'comments', 'user_id', 'article_id')->distinct();

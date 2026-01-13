@@ -57,6 +57,11 @@ class Article extends Model
         return $this->belongsToMany(User::class, 'favorite_articles_users', 'article_id', 'user_id')->distinct();
     }
 
+    public function lastReadBuUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'last_read_article', 'article_id', 'user_id')->distinct();
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'article_category', 'article_id', 'category_id');

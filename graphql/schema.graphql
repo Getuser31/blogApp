@@ -24,6 +24,7 @@ type User {
     ): [Comment!]! @hasMany
     commentedArticles: [Article!]! @belongsToMany
     favoriteArticles: [Article!]! @belongsToMany(relation: "favoriteArticles")
+    lastReadArticles: [Article!]! @belongsToMany(relation: "lastReadArticles")
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -154,4 +155,7 @@ type Mutation {
 
     addFavoriteArticle(articleId: ID!): Article
     @field(resolver: "App\\GraphQL\\Mutations\\AddFavoriteArticle")
+
+    addLastReadArticle(articleId: ID!): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\AddLastReadArticle")
 }
