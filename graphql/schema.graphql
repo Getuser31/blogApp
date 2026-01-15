@@ -126,7 +126,7 @@ type AuthPayload {
 type Mutation {
     login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
 
-    createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!]): Article
+    createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
     @guard(with: ["sanctum", "admin"])
     @admin
@@ -164,4 +164,7 @@ type Mutation {
 
     updateEmail(email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateEmail")
+
+    togglePublishStatus(articleId: ID!, publish: Boolean): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\PublishStatusArticle")
 }

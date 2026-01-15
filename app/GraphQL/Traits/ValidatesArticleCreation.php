@@ -19,6 +19,7 @@ trait ValidatesArticleCreation
             'categoryIds' => ['nullable', 'array'],
             'categoryIds.*' => ['exists:categories,id'],
             'images' => ['nullable', 'array'],
+            'publish' => ['nullable', 'boolean'],
         ];
     }
 }

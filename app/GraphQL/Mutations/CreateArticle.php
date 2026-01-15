@@ -20,7 +20,7 @@ final readonly class CreateArticle
      * Creates a new article.
      *
      * @param null $_
-     * @param array{title: string, content: string, categoryIds?: array<int>, images?: array<UploadedFile>} $args
+     * @param array{title: string, content: string, categoryIds?: array<int>, images?: array<UploadedFile>, publish?: bool} $args
      * @return Model
      * @throws ValidationException
      */
@@ -40,6 +40,7 @@ final readonly class CreateArticle
         $article = $user->articles()->create([
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'published' => $validated['publish'] ?? false,
         ]);
 
         if (isset($validated['categoryIds'])) {
