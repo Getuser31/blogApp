@@ -39,6 +39,12 @@ final class Login
             ]);
         }
 
+        if (!$user->is_enabled) {
+            throw ValidationException::withMessages([
+                'email' => 'This account has been disabled.',
+            ]);
+        }
+
         return [
             'token' => $user->createToken('graphql')->plainTextToken,
             'user' => $user,

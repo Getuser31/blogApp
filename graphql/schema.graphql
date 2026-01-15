@@ -9,6 +9,7 @@ type User {
     id: ID!
     name: String!
     email: String!
+    is_enabled: Boolean!
     role: Role! @belongsTo
     articles(
         "Limit the number of articles returned."
@@ -93,6 +94,9 @@ type Query {
     "Find a user."
     user(id: ID! @eq): User @find @guard(with: ["sanctum"])
 
+    "Get All Users."
+    users: [User!]! @all
+
     "Me"
     me: User @auth
 
@@ -164,6 +168,9 @@ type Mutation {
 
     updateEmail(email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateEmail")
+
+    updateUserStatus(userId: ID!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserStatus")
 
     togglePublishStatus(articleId: ID!, publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\PublishStatusArticle")
