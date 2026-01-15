@@ -158,4 +158,10 @@ type Mutation {
 
     addLastReadArticle(articleId: ID!): Article
     @field(resolver: "App\\GraphQL\\Mutations\\AddLastReadArticle")
+
+    updatePassword(oldPassword: String!, password: String!, passwordRepeat: String!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\UpdatePassword")
+
+    updateEmail(email: String!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\UpdateEmail")
 }
