@@ -17,6 +17,8 @@ final readonly class AddUser
             'passwordRepeat' => 'required|same:password',
         ]);
 
+        $validator->validate();
+
         if($validation->failed()) {
             throw ValidationException::withMessages($validation->errors()->toArray());
         }

@@ -15,6 +15,8 @@ final readonly class AddLastReadArticle
             'articleId' => ['required', 'integer', 'exists:articles,id']
         ]);
 
+        $validator->validate();
+
         if (!$validatedData) {
             throw ValidationException::withMessages($validatedData->errors()->toArray());
         }

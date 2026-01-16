@@ -14,6 +14,9 @@ final readonly class DeleteImage
         $validator = Validator::make($args, [
             'id' => ['required', 'integer', 'exists:images,id']
         ]);
+
+        $validator->validate();
+
         if($validator->fails()) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }

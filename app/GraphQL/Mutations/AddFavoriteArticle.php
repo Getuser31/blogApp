@@ -16,6 +16,8 @@ final readonly class AddFavoriteArticle
             'articleId' => ['required', 'integer', 'exists:articles,id']
         ]);
 
+        $validator->validate();
+
         if (!$validator) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }

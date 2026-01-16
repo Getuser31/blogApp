@@ -16,6 +16,8 @@ final readonly class PublishStatusArticle
             'publish' => ['required', 'boolean']
         ]);
 
+        $validator->validate();
+
         if ($validate->fails()) {
             return new Error('Validation failed: ' . json_encode($validate->errors()));
         }

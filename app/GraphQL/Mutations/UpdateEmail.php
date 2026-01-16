@@ -14,6 +14,8 @@ final readonly class UpdateEmail
             'email' => ['required', 'email', 'unique:users,email']
         ]);
 
+        $validator->validate();
+
         if ($validator->fails()) {
             return new Error('Validation failed: ' . json_encode($validator->errors()));
         }

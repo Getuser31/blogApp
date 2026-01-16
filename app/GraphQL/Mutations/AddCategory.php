@@ -16,6 +16,8 @@ final readonly class AddCategory
             'name' => ['required', 'string', 'max:255']
         ]);
 
+        $validator->validate();
+
         if ($validator->fails()) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }

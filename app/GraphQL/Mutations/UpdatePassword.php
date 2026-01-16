@@ -20,6 +20,8 @@ final readonly class UpdatePassword
             'passwordRepeat' => ['required', 'string', 'same:password']
         ]);
 
+        $validator->validate();
+
         if ($validator->fails()) {
             throw new Error('Validation failed: ' . json_encode($validator->errors()));
         }

@@ -9,7 +9,7 @@ type User {
     id: ID!
     name: String!
     email: String!
-    is_enabled: Boolean!
+    is_enabled: Boolean
     role: Role! @belongsTo
     articles(
         "Limit the number of articles returned."
@@ -117,6 +117,9 @@ type Query {
 
     "Get Favorite Articles for User"
     getFavoriteArticles: User @auth @guard(with: ["sanctum"])
+
+    "Get All Roles"
+    getRoles: [Role!]! @all @guard(with: ["sanctum"]) @admin
 }
 
 "A token response for authentication."
@@ -132,12 +135,12 @@ type Mutation {
 
     createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
-    @guard(with: ["sanctum", "admin"])
+    @guard(with: ["sanctum"])
     @admin
 
     editArticle(id: ID!, title: String, content: String, categoryIds: [ID!], images: [Upload]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
-    @guard(with: ["sanctum", "admin"])
+    @guard(with: ["sanctum"])
     @admin
 
     addComment(articleId: ID!, content: String!): Comment
@@ -174,4 +177,9 @@ type Mutation {
 
     togglePublishStatus(articleId: ID!, publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\PublishStatusArticle")
+
+    updateRole(userId: ID!, roleId: ID!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\UpdateRole")
+    @guard(with: ["sanctum"])
+    @admin
 }

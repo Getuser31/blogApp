@@ -27,6 +27,8 @@ final class Login
             'password' => ['required', 'string'],
         ]);
 
+        $validator->validate();
+
         if ($validator->fails()) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }

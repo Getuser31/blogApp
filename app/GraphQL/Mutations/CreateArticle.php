@@ -28,6 +28,7 @@ final readonly class CreateArticle
     {
         // Use Laravel's Validator facade to validate the arguments.
         $validator = Validator::make($args, $this->rules());
+        $validator->validate();
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }

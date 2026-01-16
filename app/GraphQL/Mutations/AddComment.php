@@ -20,6 +20,8 @@ final readonly class AddComment
             'content' => ['required', 'string'],
         ]);
 
+        $validator->validate();
+
         if($validator->failed()) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }

@@ -25,6 +25,8 @@ final readonly class EditArticle
             'categoryIds.*' => ['exists:categories,id']
         ]);
 
+        $validator->validate();
+
         if ($validator->fails()) {
             throw ValidationException::withMessages($validator->errors()->toArray());
         }
