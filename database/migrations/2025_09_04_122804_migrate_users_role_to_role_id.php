@@ -47,8 +47,22 @@ return new class extends Migration
         if (Schema::hasColumn('users', 'role_id')) {
             $nulls = DB::table('users')->whereNull('role_id')->count();
             if ($nulls === 0) {
+                // Drop the foreign key constraint that might have SET NULL
+                Schema::table('users', function (Blueprint $table) {
+                    $table->dropForeign(['role_id']);
+                });
+
                 // Use raw SQL to avoid requiring doctrine/dbal for change()
                 DB::statement('ALTER TABLE `users` MODIFY `role_id` BIGINT UNSIGNED NOT NULL');
+
+                // Re-add the foreign key constraint without SET NULL
+                Schema::table('users', function (Blueprint $table) {
+                    $table->foreign('role_id')
+                        ->references('id')
+                        ->on('roles')
+                        ->cascadeOnUpdate()
+                        ->restrictOnDelete();
+                });
             }
         }
 
