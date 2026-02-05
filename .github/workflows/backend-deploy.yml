@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             # 1. Navigate to the folder
-            cd /var/www/html/blog
+            cd /var/www/html/blogApp
 
             # 2. Pull the latest code
             git pull origin main
