@@ -24,7 +24,8 @@ jobs:
             composer install --no-dev --optimize-autoloader
 
             # 4. Cache configuration (Helps PHP performance)
-            php artisan config:cache
+            php artisan config:clear
+            php artisan cache:clear
             php artisan route:cache
 
             # 5. Run migrations
