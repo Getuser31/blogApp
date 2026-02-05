@@ -11,15 +11,15 @@ final readonly class PublishStatusArticle
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $validate = Validator::make($args, [
+        $validator = Validator::make($args, [
             'articleId' => ['required', 'exists:articles,id'],
             'publish' => ['required', 'boolean']
         ]);
 
         $validator->validate();
 
-        if ($validate->fails()) {
-            return new Error('Validation failed: ' . json_encode($validate->errors()));
+        if ($validator->fails()) {
+            return new Error('Validation failed: ' . json_encode($validator->errors()));
         }
 
         $article = Article::findOrFail($args['articleId']);
