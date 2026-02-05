@@ -7,12 +7,6 @@ use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
-// Check if the base class exists. If not, create a dummy class so the app doesn't crash.
-if (!class_exists(TelescopeApplicationServiceProvider::class)) {
-    class DummyTelescopeServiceProvider {}
-    class_alias(DummyTelescopeServiceProvider::class, TelescopeApplicationServiceProvider::class);
-}
-
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 {
     /**
