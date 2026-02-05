@@ -18,8 +18,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.62",
-        "opcodesio/log-viewer": "^3.21",
-        "laravel/telescope": "^5.15"
+        "opcodesio/log-viewer": "^3.21"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",
@@ -27,6 +26,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
         "laravel/sail": "^1.41",
+        "laravel/telescope": "^5.15",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.0",
