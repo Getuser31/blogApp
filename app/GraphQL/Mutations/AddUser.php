@@ -4,13 +4,14 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 final readonly class AddUser
 {
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $validator = \Validator::make($args, [
+        $validator = Validator::make($args, [
             'username' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
