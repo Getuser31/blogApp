@@ -10,7 +10,7 @@ final readonly class AddUser
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $validation = \Validator::make($args, [
+        $validator = \Validator::make($args, [
             'username' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
@@ -19,17 +19,15 @@ final readonly class AddUser
 
         $validator->validate();
 
-        if($validation->failed()) {
-            throw ValidationException::withMessages($validation->errors()->toArray());
+        if($validator->failed()) {
+            throw ValidationException::withMessages($validator->errors()->toArray());
         }
 
-        $user = User::create([
+        return User::create([
             'name' => $args['username'],
             'email' => $args['email'],
             'password' => $args['password'],
             'role_id' => 2
         ]);
-
-        return $user;
     }
 }
