@@ -17,6 +17,9 @@ jobs:
             # 1. Navigate to the folder
             cd /var/www/html/blogApp
 
+            # Fix git ownership issue
+            git config --global --add safe.directory /var/www/html/blogApp
+
             # 2. Pull the latest code
             git pull origin main
 
