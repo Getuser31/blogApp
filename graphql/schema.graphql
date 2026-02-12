@@ -17,6 +17,7 @@ type User {
         "Order the articles."
         orderBy: [OrderByClause!] @orderBy
     ): [Article!]! @hasMany
+    paginatedArticles: [Article!]! @hasMany(relation: "articles", type: PAGINATOR) @where(key: "published", value: true)
     comments(
         "Limit the number of comments returned."
         limit: Int @limit
@@ -93,6 +94,9 @@ type Query {
 
     "Find a user."
     user(id: ID! @eq): User @find @guard(with: ["sanctum"])
+
+    "Find User by Name"
+    userByName(name: String! @eq): User @find
 
     "Get All Users."
     users: [User!]! @all
