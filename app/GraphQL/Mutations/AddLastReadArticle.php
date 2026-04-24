@@ -4,7 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Article;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 final readonly class AddLastReadArticle
 {
@@ -15,13 +14,7 @@ final readonly class AddLastReadArticle
             'articleId' => ['required', 'integer', 'exists:articles,id']
         ]);
 
-        $validator->validate();
-
-        if (!$validatedData) {
-            throw ValidationException::withMessages($validatedData->errors()->toArray());
-        }
-
-        $article = Article::findOrFail($args['articleId']);
+        $article = Article::findOrFail($validatedData['articleId']);
 
         $user = auth()->user();
 
