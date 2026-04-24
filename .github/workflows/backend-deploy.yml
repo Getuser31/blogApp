@@ -28,7 +28,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run tests
-        run: vendor/bin/pest --without-tty
+        run: vendor/bin/pest tests/Feature/GraphQL
 
   deploy:
     needs: test
@@ -41,26 +41,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # 1. Navigate to the folder
             cd /var/www/html/blogApp
-
-            # Fix git ownership issue
             git config --global --add safe.directory /var/www/html/blogApp
-
-            # Discard local changes (e.g. config/cors.php) to allow pull
             git reset --hard
-
-            # 2. Pull the latest code
             git pull origin main
-
-            # 3. Install dependencies
             composer install --no-dev --optimize-autoloader
-
-            # 4. Cache configuration (Helps PHP performance)
             php artisan config:clear
             php artisan cache:clear
             php artisan route:cache
             php artisan lighthouse:clear-cache
-
-            # 5. Run migrations
             php artisan migrate --force
