@@ -13,7 +13,7 @@ final readonly class UpdateUserStatus
         $validate = Validator::make($args, [
             'userId' => 'required|integer|exists:users,id',
         ]);
-        $validator->validate();
+        $validate->validate();
         if ($validate->fails()) {
             return new Error('Validation failed: ' . json_encode($validate->errors()));
         }

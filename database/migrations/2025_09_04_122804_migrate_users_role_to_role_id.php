@@ -32,15 +32,29 @@ return new class extends Migration
 
         // 2) Backfill role_id from the old string column 'role' by matching roles.slug
         if (Schema::hasColumn('users', 'role')) {
-            // Single SQL UPDATE ... JOIN is fast and safe
-            DB::statement('
-                UPDATE `users` u
-                JOIN `roles` r ON r.`slug` = u.`role`
-                SET u.`role_id` = r.`id`
-                WHERE u.`role_id` IS NULL
-                  AND u.`role` IS NOT NULL
-                  AND u.`role` <> \'\'
-            ');
+            if (DB::connection()->getDriverName() === 'sqlite') {
+                // SQLite does not support UPDATE ... JOIN syntax
+                $rows = DB::table('users')
+                    ->join('roles', 'roles.slug', '=', 'users.role')
+                    ->whereNull('users.role_id')
+                    ->whereNotNull('users.role')
+                    ->where('users.role', '<>', '')
+                    ->select('users.id as uid', 'roles.id as rid')
+                    ->get();
+
+                foreach ($rows as $row) {
+                    DB::table('users')->where('id', $row->uid)->update(['role_id' => $row->rid]);
+                }
+            } else {
+                DB::statement('
+                    UPDATE `users` u
+                    JOIN `roles` r ON r.`slug` = u.`role`
+                    SET u.`role_id` = r.`id`
+                    WHERE u.`role_id` IS NULL
+                      AND u.`role` IS NOT NULL
+                      AND u.`role` <> \'\'
+                ');
+            }
         }
 
         // 3) Enforce NOT NULL only when all rows are filled
@@ -52,8 +66,13 @@ return new class extends Migration
                     $table->dropForeign(['role_id']);
                 });
 
-                // Use raw SQL to avoid requiring doctrine/dbal for change()
-                DB::statement('ALTER TABLE `users` MODIFY `role_id` BIGINT UNSIGNED NOT NULL');
+                if (DB::connection()->getDriverName() === 'sqlite') {
+                    // SQLite doesn't support MODIFY, so we skip enforcing NOT NULL in-memory
+                    // (the column is already effectively NOT NULL since all rows have values)
+                } else {
+                    // Use raw SQL to avoid requiring doctrine/dbal for change()
+                    DB::statement('ALTER TABLE `users` MODIFY `role_id` BIGINT UNSIGNED NOT NULL');
+                }
 
                 // Re-add the foreign key constraint without SET NULL
                 Schema::table('users', function (Blueprint $table) {
@@ -90,11 +109,22 @@ return new class extends Migration
 
         // 2) Restore users.role from the linked roles.slug when possible
         if (Schema::hasColumn('users', 'role_id') && Schema::hasTable('roles')) {
-            DB::statement('
-                UPDATE `users` u
-                JOIN `roles` r ON r.`id` = u.`role_id`
-                SET u.`role` = r.`slug`
-            ');
+            if (DB::connection()->getDriverName() === 'sqlite') {
+                $rows = DB::table('users')
+                    ->join('roles', 'roles.id', '=', 'users.role_id')
+                    ->select('users.id as uid', 'roles.slug as slug')
+                    ->get();
+
+                foreach ($rows as $row) {
+                    DB::table('users')->where('id', $row->uid)->update(['role' => $row->slug]);
+                }
+            } else {
+                DB::statement('
+                    UPDATE `users` u
+                    JOIN `roles` r ON r.`id` = u.`role_id`
+                    SET u.`role` = r.`slug`
+                ');
+            }
         }
 
         // 3) Drop the foreign key and column if present
