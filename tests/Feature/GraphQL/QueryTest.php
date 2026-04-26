@@ -114,6 +114,9 @@ test('it can fetch all categories', function () {
 });
 
 test('it can fetch user by name', function () {
+    $admin = User::factory()->admin()->create();
+    $this->actingAs($admin);
+
     User::factory()->withRole()->create(['name' => 'UniqueUser']);
 
     $response = $this->graphQL('
@@ -130,6 +133,9 @@ test('it can fetch user by name', function () {
 });
 
 test('it can fetch all users', function () {
+    $admin = User::factory()->admin()->create();
+    $this->actingAs($admin);
+
     User::factory()->count(5)->withRole()->create();
 
     $response = $this->graphQL('
@@ -142,5 +148,5 @@ test('it can fetch all users', function () {
         }
     ');
 
-    expect($response->json('data.users'))->toHaveCount(5);
+    expect($response->json('data.users'))->toHaveCount(6);
 });

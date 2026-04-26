@@ -2,6 +2,7 @@
 
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Images;
 use App\Models\Roles;
 use App\Models\User;
 
@@ -217,4 +218,47 @@ test('it can add last read article', function () {
 
     expect($response->json('data.addLastReadArticle.id'))->toBe((string) $article->id);
     expect($user->fresh()->lastReadArticles)->toHaveCount(1);
+});
+
+test('non-admin user cannot edit an article that does not belong to them', function () {
+    $user = User::factory()->withRole()->create();
+    $this->actingAs($user);
+
+    $otherUser = User::factory()->withRole()->create();
+    $article = Article::factory()->create(['author_id' => $otherUser->id]);
+
+    $response = $this->graphQL('
+        mutation {
+            editArticle(
+                id: '.$article->id.'
+                title: "Hacked Title"
+                content: "Hacked content"
+            ) {
+                id
+                title
+            }
+        }
+    ');
+
+    expect($response->json('errors'))->not->toBeNull();
+});
+
+test('user cannot delete an image from an article that does not belong to them', function () {
+    $user = User::factory()->withRole()->create();
+    $this->actingAs($user);
+
+    $otherUser = User::factory()->withRole()->create();
+    $article = Article::factory()->create(['author_id' => $otherUser->id]);
+    $image = Images::factory()->create(['article_id' => $article->id]);
+
+    $response = $this->graphQL('
+        mutation {
+            deleteImage(id: '.$image->id.') {
+                id
+                path
+            }
+        }
+    ');
+
+    expect($response->json('errors'))->not->toBeNull();
 });

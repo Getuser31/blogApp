@@ -14,6 +14,9 @@ beforeEach(function () {
 });
 
 test('admin can create a category', function () {
+    $user = User::factory()->admin()->create();
+    $this->actingAs($user);
+
     $response = $this->graphQL('
         mutation {
             addCategory(name: "Technology") {
@@ -29,6 +32,9 @@ test('admin can create a category', function () {
 });
 
 test('admin can delete a category', function () {
+    $user = User::factory()->admin()->create();
+    $this->actingAs($user);
+
     $category = Category::factory()->create(['name' => 'Tech', 'slug' => 'tech']);
 
     $response = $this->graphQL('

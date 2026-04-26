@@ -104,8 +104,8 @@ type Query {
     "Me"
     me: User @auth @guard(with: ["sanctum"])
 
-    "Get All User Data."
-    getUserData(id: ID! @eq): User @find @guard(with: ["sanctum"])
+    "Get All User Data (own data or admin only)."
+    getUserData(id: ID!): User @field(resolver: "App\\GraphQL\\Queries\\GetUserData") @guard(with: ["sanctum"])
 
     "Get All articles for a user"
     userArticles: User @auth @guard(with: ["sanctum"])

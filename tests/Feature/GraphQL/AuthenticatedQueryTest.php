@@ -136,3 +136,72 @@ test('non-admin user cannot fetch roles', function () {
 
     expect($response->json('errors'))->not->toBeNull();
 });
+
+test('unauthenticated user cannot retrieve user data via getUserData', function () {
+    $response = $this->graphQL('
+        {
+            getUserData(id: 1) {
+                id
+                name
+                email
+            }
+        }
+    ');
+
+    expect($response->json('data.getUserData'))->toBeNull();
+});
+
+test('authenticated user can retrieve their own data via getUserData', function () {
+    $user = User::factory()->withRole()->create();
+    $this->actingAs($user);
+
+    $response = $this->graphQL('
+        {
+            getUserData(id: '.$user->id.') {
+                id
+                name
+                email
+            }
+        }
+    ');
+
+    expect($response->json('data.getUserData.email'))->toBe($user->email);
+});
+
+test('authenticated user cannot retrieve another users data via getUserData', function () {
+    $user = User::factory()->withRole()->create();
+    $this->actingAs($user);
+
+    $otherUser = User::factory()->withRole()->create();
+
+    $response = $this->graphQL('
+        {
+            getUserData(id: '.$otherUser->id.') {
+                id
+                name
+                email
+            }
+        }
+    ');
+
+    expect($response->json('data.getUserData'))->toBeNull();
+});
+
+test('admin can retrieve any users data via getUserData', function () {
+    $admin = User::factory()->admin()->create();
+    $this->actingAs($admin);
+
+    $otherUser = User::factory()->withRole()->create();
+
+    $response = $this->graphQL('
+        {
+            getUserData(id: '.$otherUser->id.') {
+                id
+                name
+                email
+            }
+        }
+    ');
+
+    expect($response->json('data.getUserData.email'))->toBe($otherUser->email);
+});
