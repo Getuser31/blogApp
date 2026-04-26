@@ -96,7 +96,7 @@ type Query {
     user(id: ID! @eq): User @find @guard(with: ["sanctum"])
 
     "Find User by Name"
-    userByName(name: String! @eq): User @find @guard(with: ["sanctum"])
+    userByName(name: String! @eq): User @find
 
     "Get All Users."
     users: [User!]! @all @guard(with: ["sanctum"])
