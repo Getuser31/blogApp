@@ -113,10 +113,7 @@ test('it can fetch all categories', function () {
     expect($response->json('data.getCategories'))->toHaveCount(3);
 });
 
-test('it can fetch user by name', function () {
-    $admin = User::factory()->admin()->create();
-    $this->actingAs($admin);
-
+test('unauthenticated user can fetch user by name', function () {
     User::factory()->withRole()->create(['name' => 'UniqueUser']);
 
     $response = $this->graphQL('
@@ -130,6 +127,41 @@ test('it can fetch user by name', function () {
     ');
 
     expect($response->json('data.userByName.name'))->toBe('UniqueUser');
+});
+
+test('authenticated user can fetch user by name', function () {
+    $admin = User::factory()->admin()->create();
+    $this->actingAs($admin);
+
+    User::factory()->withRole()->create(['name' => 'AnotherUser']);
+
+    $response = $this->graphQL('
+        {
+            userByName(name: "AnotherUser") {
+                id
+                name
+                email
+            }
+        }
+    ');
+
+    expect($response->json('data.userByName.name'))->toBe('AnotherUser');
+});
+
+test('unauthenticated user can fetch all categories', function () {
+    $categories = Category::factory()->count(3)->create();
+
+    $response = $this->graphQL('
+        {
+            getCategories {
+                id
+                name
+                slug
+            }
+        }
+    ');
+
+    expect($response->json('data.getCategories'))->toHaveCount(3);
 });
 
 test('it can fetch all users', function () {
