@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Article;
 use App\Models\Images;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -22,6 +23,13 @@ final readonly class DeleteImage
         }
 
         $image = Images::findOrFail($args['id']);
+
+        $article = Article::findOrFail($image->article_id);
+        $currentUser = auth()->user();
+        if ($article->author_id !== $currentUser->id && !$currentUser->isAdmin()) {
+            throw ValidationException::withMessages(['id' => 'Unauthorized to delete this image']);
+        }
+
         $image->delete();
         return $image;
     }

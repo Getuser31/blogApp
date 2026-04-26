@@ -96,16 +96,16 @@ type Query {
     user(id: ID! @eq): User @find @guard(with: ["sanctum"])
 
     "Find User by Name"
-    userByName(name: String! @eq): User @find
+    userByName(name: String! @eq): User @find @guard(with: ["sanctum"])
 
     "Get All Users."
-    users: [User!]! @all
+    users: [User!]! @all @guard(with: ["sanctum"])
 
     "Me"
-    me: User @auth
+    me: User @auth @guard(with: ["sanctum"])
 
     "Get All User Data."
-    getUserData(id: ID! @eq): User @find
+    getUserData(id: ID! @eq): User @find @guard(with: ["sanctum"])
 
     "Get All articles for a user"
     userArticles: User @auth @guard(with: ["sanctum"])
@@ -135,7 +135,9 @@ type AuthPayload {
 
 "Defines the mutations available to the client."
 type Mutation {
-    login(email: String!, password: String!): AuthPayload @field(resolver: "App\\GraphQL\\Mutations\\Login")
+    login(email: String!, password: String!): AuthPayload
+    @field(resolver: "App\\GraphQL\\Mutations\\Login")
+    @throttle(maxAttempts: 5, decayMinutes: 1)
 
     createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
@@ -157,30 +159,42 @@ type Mutation {
 
     addUser(username: String!, password: String!, passwordRepeat: String!, email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\AddUser")
+    @throttle(maxAttempts: 10, decayMinutes: 1)
 
     addCategory(name: String!): Category
     @field(resolver: "App\\GraphQL\\Mutations\\AddCategory")
+    @guard(with: ["sanctum"])
+    @admin
 
     deleteCategory(id: ID!): Category
     @field(resolver: "App\\GraphQL\\Mutations\\DeleteCategory")
+    @guard(with: ["sanctum"])
+    @admin
 
     addFavoriteArticle(articleId: ID!): Article
     @field(resolver: "App\\GraphQL\\Mutations\\AddFavoriteArticle")
+    @guard(with: ["sanctum"])
 
     addLastReadArticle(articleId: ID!): Article
     @field(resolver: "App\\GraphQL\\Mutations\\AddLastReadArticle")
+    @guard(with: ["sanctum"])
 
     updatePassword(oldPassword: String!, password: String!, passwordRepeat: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdatePassword")
+    @guard(with: ["sanctum"])
 
     updateEmail(email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateEmail")
+    @guard(with: ["sanctum"])
 
     updateUserStatus(userId: ID!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserStatus")
+    @guard(with: ["sanctum"])
+    @admin
 
     togglePublishStatus(articleId: ID!, publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\PublishStatusArticle")
+    @guard(with: ["sanctum"])
 
     updateRole(userId: ID!, roleId: ID!): User
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateRole")
