@@ -142,12 +142,12 @@ type Mutation {
     createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
     @guard(with: ["sanctum"])
-    @admin
+    @author
 
     editArticle(id: ID!, title: String, content: String, categoryIds: [ID!], images: [Upload]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
     @guard(with: ["sanctum"])
-    @admin
+    @author
 
     addComment(articleId: ID!, content: String!): Comment
     @field(resolver: "App\\GraphQL\\Mutations\\AddComment")
@@ -156,6 +156,7 @@ type Mutation {
     deleteImage(id: ID!): Image
     @field(resolver: "App\\GraphQL\\Mutations\\DeleteImage")
     @guard(with: ["sanctum"])
+    @author
 
     addUser(username: String!, password: String!, passwordRepeat: String!, email: String!): User
     @field(resolver: "App\\GraphQL\\Mutations\\AddUser")
