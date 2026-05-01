@@ -4,6 +4,7 @@ namespace App\GraphQL\Directives;
 
 use App\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Auth\Access\AuthorizationException;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\FieldMiddleware;
@@ -29,8 +30,9 @@ final class AuthorDirective extends BaseDirective implements FieldMiddleware
             return function($root, array $args, GraphQLContext $context, ResolveInfo $info) use ($resolver) {
                 /** @var User $user */
                 $user = $context->user();
-                if(strtolower($user->role?->name ?? '') !== 'author' && strtolower($user->role?->name ?? '') !== 'admin'){
-                    return null;
+                $roleName = strtolower($user->role?->name ?? '');
+                if ($roleName !== 'author' && $roleName !== 'admin') {
+                    throw new AuthorizationException('This action is unauthorized.');
                 }
                 return $resolver($root, $args, $context, $info);
             };
