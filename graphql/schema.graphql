@@ -81,13 +81,24 @@ type Comment @model(class: "App\\Models\\Comments") {
     article: Article! @belongsTo
 }
 
+type LastArticlesResponse {
+    articles: [Article!]!
+    hasMore: Boolean!
+}
+
 "Defines the queries available to the client."
 type Query {
     "Find all published articles, paginated."
     publishedArticles(
         "Filter by category ID."
         category_id: ID @scope(name: "categoryId")
-    ): [Article!]! @paginate(defaultCount: 10) @where(key: "published", value: true) @orderBy(column: "created_at", direction: DESC)
+    ): [Article!]! @paginate(defaultCount: 9) @where(key: "published", value: true) @orderBy(column: "created_at", direction: DESC)
+
+    "Find last 7 articles published, with categories"
+    publishedLastArticles(
+        "Filter by category ID."
+        category_id: ID @scope(name: "categoryId")
+    ): LastArticlesResponse! @field(resolver: "App\\GraphQL\\Queries\\PublishedLastArticles")
 
     "Find all article by a specific user, paginated"
     articlesByUser(userID: ID! @eq(key: "author_id")): [Article!] @paginate(defaultCount: 10)
@@ -116,10 +127,10 @@ type Query {
     "Get All Categories"
     getCategories: [Category!]! @all
 
-    "Search in Articles"
+    "Search in HomePage"
     searchArticles(search: String! @scope(name: "search")): [Article!]! @paginate(defaultCount: 10)
 
-    "Get Favorite Articles for User"
+    "Get Favorite HomePage for User"
     getFavoriteArticles: User @auth @guard(with: ["sanctum"])
 
     "Get All Roles"

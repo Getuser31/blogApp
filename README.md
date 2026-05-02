@@ -132,9 +132,9 @@ docker compose exec app php artisan test
 
 | Model | Relationships |
 |-------|---------------|
-| `User` | Has many Articles, Comments, FavoriteArticles, LastReadArticles; Belongs to Role |
+| `User` | Has many HomePage, Comments, FavoriteArticles, LastReadArticles; Belongs to Role |
 | `Article` | Belongs to User (author); Belongs to many Categories, Users (favorites, last-read); Has many Images, Comments |
-| `Category` | Belongs to many Articles |
+| `Category` | Belongs to many HomePage |
 | `Images` | Belongs to Article |
 | `Comments` | Belongs to User & Article |
 | `Roles` | Has many Users |
