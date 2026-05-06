@@ -21,7 +21,10 @@ test('it can fetch published articles', function () {
             publishedArticles(first: 10) {
                 data {
                     id
-                    title
+                    translations {
+                        locale
+                        title
+                    }
                     published
                 }
             }
@@ -46,7 +49,9 @@ test('it can fetch articles by user', function () {
             articlesByUser(userID: '.$user->id.', first: 10) {
                 data {
                     id
-                    title
+                    translations {
+                        title
+                    }
                 }
             }
         }
@@ -62,8 +67,11 @@ test('it can fetch a single article by id', function () {
         {
             article(id: '.$article->id.') {
                 id
-                title
-                content
+                translations {
+                    locale
+                    title
+                    content
+                }
                 published
                 author {
                     id
@@ -73,28 +81,40 @@ test('it can fetch a single article by id', function () {
         }
     ');
 
-    expect($response->json('data.article.title'))->toBe($article->title)
+    expect($response->json('data.article.translations.0.title'))->toBe($article->translations()->where('locale', 'en')->value('title'))
         ->and($response->json('data.article.id'))->toBe((string) $article->id);
 });
 
 test('it can search articles', function () {
-    Article::factory()->create(['title' => 'Laravel Testing', 'published' => true]);
-    Article::factory()->create(['title' => 'PHP Development', 'published' => true]);
-    Article::factory()->create(['title' => 'JavaScript Guide', 'published' => true]);
+    Article::factory()->create(['published' => true]);
+    Article::factory()->create(['published' => true]);
+    Article::factory()->create(['published' => true]);
+
+    // Manually create translations with specific titles for search testing
+    $articles = Article::where('published', true)->get();
+    $titles = ['Laravel Testing', 'PHP Development', 'JavaScript Guide'];
+    foreach ($articles as $i => $article) {
+        $article->translations()->updateOrCreate(
+            ['locale' => 'en'],
+            ['title' => $titles[$i], 'content' => 'Content ' . $i]
+        );
+    }
 
     $response = $this->graphQL('
         {
             searchArticles(search: "Laravel", first: 10) {
                 data {
                     id
-                    title
+                    translations {
+                        title
+                    }
                 }
             }
         }
     ');
 
     expect($response->json('data.searchArticles.data'))->toHaveCount(1)
-        ->and($response->json('data.searchArticles.data.0.title'))->toBe('Laravel Testing');
+        ->and($response->json('data.searchArticles.data.0.translations.0.title'))->toBe('Laravel Testing');
 });
 
 test('it can fetch all categories', function () {

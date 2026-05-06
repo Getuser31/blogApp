@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Article;
+use App\Models\ArticleTranslation;
 use App\Models\User;
 use App\GraphQL\Traits\ValidatesArticleCreation;
 use Illuminate\Database\Eloquent\Model;
@@ -39,9 +40,14 @@ final readonly class CreateArticle
 
         /** @var Article $article */
         $article = $user->articles()->create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
             'published' => $validated['publish'] ?? false,
+        ]);
+
+        // Create the initial translation for the article.
+        $article->translations()->create([
+            'locale'  => $validated['locale'] ?? 'en',
+            'title'   => $validated['title'],
+            'content' => $validated['content'],
         ]);
 
         if (isset($validated['categoryIds'])) {

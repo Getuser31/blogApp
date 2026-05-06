@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Article;
+use App\Models\ArticleTranslation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,8 +17,6 @@ class ArticleFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence(),
-            'content' => fake()->paragraphs(3, true),
             'author_id' => User::factory(),
             'published' => false,
         ];
@@ -28,5 +27,16 @@ class ArticleFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'published' => true,
         ]);
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Article $article) {
+            $article->translations()->create([
+                'locale'  => 'en',
+                'title'   => fake()->sentence(),
+                'content' => fake()->paragraphs(3, true),
+            ]);
+        });
     }
 }

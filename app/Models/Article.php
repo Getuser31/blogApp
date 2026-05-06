@@ -14,22 +14,19 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
- * @property string $title
- * @property string $content
  * @property int $author_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $author
  * @property-read Collection<int, Category> $categories
  * @property-read int|null $categories_count
+ * @property-read Collection<int, ArticleTranslation> $translations
  * @method static Builder<static>|Article newModelQuery()
  * @method static Builder<static>|Article newQuery()
  * @method static Builder<static>|Article query()
  * @method static Builder<static>|Article whereAuthorId($value)
- * @method static Builder<static>|Article whereContent($value)
  * @method static Builder<static>|Article whereCreatedAt($value)
  * @method static Builder<static>|Article whereId($value)
- * @method static Builder<static>|Article whereTitle($value)
  * @method static Builder<static>|Article whereUpdatedAt($value)
  * @mixin \Eloquent
  */
@@ -38,8 +35,6 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
         'author_id',
         'published'
     ];
@@ -84,9 +79,16 @@ class Article extends Model
         });
     }
 
+    public function translations(): HasMany
+    {
+        return $this->hasMany(ArticleTranslation::class);
+    }
+
     public function scopeSearch(Builder $query, $search): Builder
     {
-        return $query->where('title', 'like', '%' . $search . '%');
+        return $query->whereHas('translations', function ($q) use ($search) {
+            $q->where('title', 'like', '%' . $search . '%');
+        });
     }
 
     public function isFavorite(): bool

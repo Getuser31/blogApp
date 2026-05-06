@@ -16,6 +16,7 @@ trait ValidatesArticleCreation
         return [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
+            'locale' => ['sometimes', 'string', 'max:10'],
             'categoryIds' => ['nullable', 'array'],
             'categoryIds.*' => ['exists:categories,id'],
             'images' => ['nullable', 'array'],

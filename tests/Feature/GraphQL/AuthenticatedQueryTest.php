@@ -54,13 +54,16 @@ test('authenticated user can fetch their articles', function () {
                 id
                 articles {
                     id
-                    title
+                    translations {
+                        title
+                    }
                 }
             }
         }
     ');
 
-    expect($response->json('data.userArticles.articles'))->toHaveCount(3);
+    $articles = $response->json('data.userArticles.articles');
+    expect($articles)->toHaveCount(3);
 });
 
 test('authenticated user can fetch their favorite articles', function () {
@@ -76,13 +79,16 @@ test('authenticated user can fetch their favorite articles', function () {
                 id
                 favoriteArticles {
                     id
-                    title
+                    translations {
+                        title
+                    }
                 }
             }
         }
     ');
 
-    expect($response->json('data.getFavoriteArticles.favoriteArticles'))->toHaveCount(2);
+    $favoriteArticles = $response->json('data.getFavoriteArticles.favoriteArticles');
+    expect($favoriteArticles)->toHaveCount(2);
 });
 
 test('authenticated user can fetch another user by id', function () {

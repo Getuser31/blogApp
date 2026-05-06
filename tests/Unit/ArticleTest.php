@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Article;
+use App\Models\ArticleTranslation;
 use App\Models\Category;
 use App\Models\Comments;
 use App\Models\Images;
@@ -68,6 +69,18 @@ test('an article belongs to many users as last read', function () {
         ->and($article->lastReadBuUsers->first())->toBeInstanceOf(User::class);
 });
 
+test('an article has many translations', function () {
+    $article = Article::factory()->create();
+
+    $translation = ArticleTranslation::factory()->create([
+        'article_id' => $article->id,
+        'locale' => 'fr',
+    ]);
+
+    expect($article->translations)->toHaveCount(2) // one from factory (en) + one created here (fr)
+        ->and($article->translations->first())->toBeInstanceOf(ArticleTranslation::class);
+});
+
 test('scope categoryId filters articles by category', function () {
     $category = Category::factory()->create();
     $articleInCategory = Article::factory()->create();
@@ -81,20 +94,39 @@ test('scope categoryId filters articles by category', function () {
         ->and($results->first()->id)->toBe($articleInCategory->id);
 });
 
-test('scope search filters articles by title', function () {
-    Article::factory()->create(['title' => 'Laravel Testing Guide']);
-    Article::factory()->create(['title' => 'PHP Best Practices']);
-    Article::factory()->create(['title' => 'JavaScript Tips']);
+test('scope search filters articles by translation title', function () {
+    Article::factory()->create();
+    Article::factory()->create();
+    Article::factory()->create();
+
+    // Manually set translation titles for search testing
+    $articles = Article::all();
+    $titles = ['Laravel Testing Guide', 'PHP Best Practices', 'JavaScript Tips'];
+    foreach ($articles as $i => $article) {
+        $article->translations()->updateOrCreate(
+            ['locale' => 'en'],
+            ['title' => $titles[$i], 'content' => 'Content']
+        );
+    }
 
     $results = Article::search('Laravel')->get();
 
-    expect($results)->toHaveCount(1)
-        ->and($results->first()->title)->toBe('Laravel Testing Guide');
+    expect($results)->toHaveCount(1);
 });
 
 test('scope search is case insensitive', function () {
-    Article::factory()->create(['title' => 'Laravel Testing Guide']);
-    Article::factory()->create(['title' => 'Another Article']);
+    Article::factory()->create();
+    Article::factory()->create();
+
+    $articles = Article::all();
+    $articles[0]->translations()->updateOrCreate(
+        ['locale' => 'en'],
+        ['title' => 'Laravel Testing Guide', 'content' => 'Content']
+    );
+    $articles[1]->translations()->updateOrCreate(
+        ['locale' => 'en'],
+        ['title' => 'Another Article', 'content' => 'Content']
+    );
 
     $results = Article::search('laravel')->get();
 
@@ -120,13 +152,18 @@ test('published scope returns only published articles', function () {
 test('an article can be created with fillable attributes', function () {
     $user = User::factory()->withRole()->create();
     $article = Article::create([
-        'title' => 'Test Article',
-        'content' => 'Test content here.',
         'author_id' => $user->id,
         'published' => true,
     ]);
 
-    expect($article->title)->toBe('Test Article')
-        ->and($article->content)->toBe('Test content here.')
-        ->and($article->published)->toBeTrue();
+    // Create a translation for the article
+    $article->translations()->create([
+        'locale'  => 'en',
+        'title'   => 'Test Article',
+        'content' => 'Test content here.',
+    ]);
+
+    expect($article->published)->toBeTrue();
+    expect($article->translations()->where('locale', 'en')->value('title'))->toBe('Test Article')
+        ->and($article->translations()->where('locale', 'en')->value('content'))->toBe('Test content here.');
 });

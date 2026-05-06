@@ -31,11 +31,20 @@ type User {
     updated_at: DateTime!
 }
 
+"A translation of an article in a specific locale."
+type ArticleTranslation @model(class: "App\\Models\\ArticleTranslation") {
+    id: ID!
+    locale: String!
+    title: String!
+    content: String!
+    article: Article! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
 "An article written by a user."
 type Article {
     id: ID!
-    title: String!
-    content: String!
     author: User! @belongsTo
     categories: [Category!] @belongsToMany
     images: [Image!]! @hasMany
@@ -45,6 +54,7 @@ type Article {
         "Order the comments."
         orderBy: [OrderByClause!] @orderBy
     ): [Comment!] @hasMany
+    translations: [ArticleTranslation!]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
     published: Boolean!
@@ -150,12 +160,12 @@ type Mutation {
     @field(resolver: "App\\GraphQL\\Mutations\\Login")
     @throttle(maxAttempts: 5, decayMinutes: 1)
 
-    createArticle(title: String!, content: String!, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
+    createArticle(title: String!, content: String!, locale: String, categoryIds: [ID!], images: [Upload!], publish: Boolean): Article
     @field(resolver: "App\\GraphQL\\Mutations\\CreateArticle")
     @guard(with: ["sanctum"])
     @author
 
-    editArticle(id: ID!, title: String, content: String, categoryIds: [ID!], images: [Upload]): Article
+    editArticle(id: ID!, locale: String, title: String, content: String, categoryIds: [ID!], images: [Upload]): Article
     @field(resolver: "App\\GraphQL\\Mutations\\EditArticle")
     @guard(with: ["sanctum"])
     @author
@@ -212,4 +222,9 @@ type Mutation {
     @field(resolver: "App\\GraphQL\\Mutations\\UpdateRole")
     @guard(with: ["sanctum"])
     @admin
+
+    addArticleTranslation(articleId: ID!, locale: String!, title: String!, content: String!): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\AddArticleTranslation")
+    @guard(with: ["sanctum"])
+    @author
 }

@@ -19,6 +19,7 @@ final readonly class EditArticle
     {
         $validator = Validator::make($args, [
             'id' => ['required', 'integer', 'exists:articles,id'],
+            'locale' => ['sometimes', 'string', 'max:10'],
             'title' => ['sometimes', 'string', 'max:255'],
             'content' => ['sometimes', 'string'],
             'categoryIds' => ['nullable', 'array'],
@@ -39,11 +40,17 @@ final readonly class EditArticle
             throw new \Exception('You are not authorized to edit this article.');
         }
 
-        $updateData = collect($args)->except('id')->all();
+        // Update or create the translation for the given locale.
+        if (isset($args['title']) || isset($args['content'])) {
+            $locale = $args['locale'] ?? 'en';
 
-        if (!empty($updateData)) {
-            $article->fill($updateData);
-            $article->save();
+            $article->translations()->updateOrCreate(
+                ['locale' => $locale],
+                [
+                    'title'   => $args['title'] ?? $article->translations()->where('locale', $locale)->value('title'),
+                    'content' => $args['content'] ?? $article->translations()->where('locale', $locale)->value('content'),
+                ]
+            );
         }
 
         if (isset($args['categoryIds'])) {
